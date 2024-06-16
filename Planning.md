@@ -1,0 +1,13 @@
+Goal: Want to make this as simple as possible to accomplish its base functionality.
+Core functionality should come from a function that takes in a song from Spotify and returns a list of samples, with the understand that that list will be used to add songs to a playlist.
+
+**`Asyncio`**: Should I use the `asyncio` module/approach for this application? Ideally, yes, but I think it would be better to get a baseline working example before getting into anything too fancy.
+### Helper Functions
+#### `getSamples`
+**Arguments:** A representation of a single song (link? name?)
+**Return value:** A sample list option (Either a list of samples or nothing).
+
+#### `getSkeleton`
+**Argument**: A link to a Spotify playlist.
+**Return value:** A Spotify playlist containing all the samples from the original playlist.
+

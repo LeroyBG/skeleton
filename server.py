@@ -1,0 +1,1 @@
+# Server for interacting with Skeleton through HTTP requests
