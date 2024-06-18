@@ -4,7 +4,7 @@
 # Email: leroylightning at ucla dot edu
 
 import requests.adapters
-from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 import spotipy
 from dotenv import load_dotenv
 from os import environ
@@ -38,25 +38,38 @@ class Skeleton:
         return s
     
     # Configure spotipy
-    def spotipy_init(self):
+    def spotipy_init(self, auth_flow):
         # Load environment variables from .env file
         load_dotenv()
         scope = 'playlist-modify-private' # So we can generate a new playlist in user's library
-        sp: spotipy.Spotify = spotipy.Spotify(
-            auth_manager=SpotifyOAuth(
+        auth_manager = None
+
+        if auth_flow == 'client':
+             auth_manager = SpotifyClientCredentials(
+                client_id=environ["CLIENT_ID"],
+                client_secret=environ["CLIENT_SECRET"],
+            )
+        else:
+            auth_manager = SpotifyOAuth(
                 client_id=environ["CLIENT_ID"],
                 client_secret=environ["CLIENT_SECRET"],
                 redirect_uri=environ["REDIRECT_URI"],
                 scope=scope
                 )
+        
+        sp: spotipy.Spotify = spotipy.Spotify(
+            auth_manager=auth_manager
             )
         return sp
     
     # Initialize properties
+    # Auth flow can be either 'client' or 'auth'
+    #   - 'auth': for running this as a CLI on your computer, the default
+    #   - 'client': for running this on the server, doesn't allow you to read or write playlists
     # Mutates: self.session, self.configured_spotipy
-    def __init__(self) -> None:
+    def __init__(self, auth_flow='auth') -> None:
         self.session = self.session_init()
-        self.configured_spotipy = self.spotipy_init()
+        self.configured_spotipy = self.spotipy_init(auth_flow=auth_flow)
     
 
     # Get the tracks from a public playlist
@@ -217,6 +230,28 @@ class Skeleton:
             if song_name_match and song_artist_match:
                 return found_song['id']
     
+    # Get sample ids from a tracklist
+    # Ideal for a server because it does most of the work that make_sample_playlist does,
+    # but doesn't create or read playlists
+    # Returns a list of ids
+    def get_sample_ids_from_trackList(self, tracks: trackList) -> list[str] | None:
+        playlist_sample_ids = []
+        for t in tracks:
+            ws_page_url: str | None = self.get_whosampled_page_url(song_name=t[0], artist_name=t[1])
+            # print(f"{t[0]}'s whosampled page url: {ws_page_url}")
+            if ws_page_url == None:
+                continue
+            
+            sample_list: trackList | None = self.get_whosampled_sample_list(ws_page_url)
+            if sample_list == None:
+                continue
+            
+            for s in sample_list:
+                id = self.get_song_spotify_id(song_name=s[0], artist_name=s[1])
+                if id is not None:
+                    playlist_sample_ids.append(id)
+        return None if  len(playlist_sample_ids) == 0 else playlist_sample_ids
+    
     # Make a new playlist with all the samples from the old one
     # Return the new playlist's url (or None if failure)
     def make_sample_playlist(self, playlist_url: str, playlist_name:str|None=None, playlist_description:str|None=None) -> str | None:
@@ -226,9 +261,9 @@ class Skeleton:
         tracks, user_id, original_playlist_name = details
         new_song_ids = []
         for t in tracks:
-            print(f"Current track: {t[0]} by {t[1]}")
+            # print(f"Current track: {t[0]} by {t[1]}")
             ws_page_url: str | None = self.get_whosampled_page_url(song_name=t[0], artist_name=t[1])
-            print(f"{t[0]}'s whosampled page url: {ws_page_url}")
+            # print(f"{t[0]}'s whosampled page url: {ws_page_url}")
             if ws_page_url == None:
                 continue
             
