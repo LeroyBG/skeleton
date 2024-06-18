@@ -1,2 +1,8 @@
 # Obsidian config files
 .obsidian/
+
+# Python virtual environment
+.venv/
+
+# .env file containing your spotify API key
+.env

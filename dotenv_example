@@ -1,0 +1,4 @@
+# See README for instructions on configuring your project
+CLIENT_ID="your client id"
+CLIENT_SECRET="your secret"
+REDIRECT_URI="your url"
