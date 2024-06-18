@@ -11,3 +11,10 @@ Core functionality should come from a function that takes in a song from Spotify
 **Argument**: A link to a Spotify playlist.
 **Return value:** A Spotify playlist containing all the samples from the original playlist.
 
+
+## Command Line Tool
+I have a command-line tool (almost) working. You put your playlist link into the command line and it makes a playlist full of samples for you. The only problem: I want to make this accessible to people without Python installed (i.e. a web app). Therefore, I'd like to use the current Skeleton functionality as a server with a separate frontend.
+Currently, the goal is to modularize Skeleton.py so I can extract all the useful bits.
+
+## TODO
+- Make logging option in Skeleton
