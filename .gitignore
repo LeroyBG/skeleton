@@ -1,8 +1,15 @@
 # Obsidian config files
 .obsidian/
 
-# Python virtual environment
+# * * * Python stuff * * * 
+__pycache__/
+# virtual environment
 .venv/
+# CPython cache
+*.pyc
 
 # .env file containing your spotify API key
 .env
+
+# Weird cache file (probably from requests module)
+.cache
