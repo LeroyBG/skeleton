@@ -194,7 +194,7 @@ class Skeleton:
                 f'all the samples from \"{n}\"'
             ]
         )
-        return random.choice(configurations)(original_playlist_name)
+        return configurations(original_playlist_name)
     
     # Create a Playlist for the user and return the url as a string
     # Returns playlist_id, final_playlist_uri
@@ -203,7 +203,7 @@ class Skeleton:
                                 playlist_description:str|None=None) -> str | None:
              
         new_playlist_name =  playlist_name if playlist_name is not None else self.get_random_skeleton_playlist_name(original_playlist_name)
-        description = playlist_description if playlist_description is not None else "generated with Skeleton :)"
+        description = playlist_description if playlist_description is not None else "made with Skeleton :)"
 
         response = self.configured_spotipy.user_playlist_create(user_id, name=new_playlist_name, public=False, description=description)
 
@@ -261,7 +261,7 @@ class Skeleton:
         tracks, user_id, original_playlist_name = details
         new_song_ids = []
         for t in tracks:
-            # print(f"Current track: {t[0]} by {t[1]}")
+            print(f"Current track: {t[0]} by {t[1]}")
             ws_page_url: str | None = self.get_whosampled_page_url(song_name=t[0], artist_name=t[1])
             # print(f"{t[0]}'s whosampled page url: {ws_page_url}")
             if ws_page_url == None:
