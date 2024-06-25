@@ -40,7 +40,7 @@
     $: lit = active && (litStrips.find((v) => v === layerNumber))
     
 
-    $: litStyle = `outline: 1.3px solid ${displayedColor}; margin: ${marginSize}; overflow-x: hidden;`
+    $: litStyle = `outline: ${colorful ? "1.5" : "1.3"}px solid ${displayedColor}; margin: ${marginSize}; overflow-x: hidden;`
     $: normalStyle = `margin: ${marginSize}; overflow-x: hidden;`
     $: style = lit ? litStyle : normalStyle
 

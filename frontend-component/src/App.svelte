@@ -217,9 +217,9 @@ $: console.log("Colorful", colorfulLoadingState)
   totalLayers={numLayers}
   marginSize={'2px'}
   defaultColor={stripColor}
-  active={true || loadingState || colorfulLoadingState || active}
+  active={loadingState || colorfulLoadingState || active}
   ticker={0}
-  period={750}
+  period={colorfulLoadingState ? 1000 : 750}
   parent={true}
   reversed={loadingState}
   colorful={colorfulLoadingState}
@@ -228,21 +228,41 @@ $: console.log("Colorful", colorfulLoadingState)
       <h1>Skeleton</h1>
       {#if userAuthorized}
         {#if !finalSpotifyPlaylistLink}
-          <form id="playlist-uri-form">
-            <label id="playlist-input-prompt">Enter playlist link</label>
-            <input id="playlist-uri-input"
-            disabled={colorfulLoadingState}
-            bind:value={userSpotifyPlaylistLinkInput} 
-            type="text">
-            <button type="submit"
-            on:click|preventDefault={(e)=>{handlePlaylistLinkSubmit(userSpotifyPlaylistLinkInput)}}
-            >GO</button>
-          </form>
+          {#if colorfulLoadingState}
+            <p>Cooking up a playlist just for you.</p>
+          {:else}
+            <form id="playlist-uri-form">
+              <label id="playlist-input-prompt">Enter playlist link</label>
+              <input id="playlist-uri-input"
+              disabled={colorfulLoadingState}
+              bind:value={userSpotifyPlaylistLinkInput} 
+              type="text">
+              <button type="submit"
+              on:click|preventDefault={(e)=>{handlePlaylistLinkSubmit(userSpotifyPlaylistLinkInput)}}
+              >GO</button>
+            </form>
+          {/if}
+          
         {:else}
-          <p>Your new playlist is in your library.
-            <a href={finalSpotifyPlaylistLink}>Here</a>'s
+          <p>Your new playlist is in your library.<br>
+            <a id="final-playlist-link"
+              href={finalSpotifyPlaylistLink}
+              on:mouseover={() => {active = true}}
+              on:focus={()=>{active = true}}
+              on:mouseout={()=>{active = false}}
+              on:blur={()=>{active = false}}
+              >Here</a>'s
             the link, if you insist :).
           </p>
+          <div class="flex-container"> <!-- Literally just to center this button -->
+            <button 
+              id="new-playlist-button"
+              on:click={() => {
+              finalSpotifyPlaylistLink = ""
+              userSpotifyPlaylistLinkInput = ""
+              }}
+              >new playlist</button>
+          </div>
         {/if}
       {:else}
       <p><a
@@ -255,9 +275,9 @@ $: console.log("Colorful", colorfulLoadingState)
         on:blur={()=>{active = false}}
         >Sign in with Spotify</a> to use this app.</p>
       {/if}
-      <h3>[Debug] State information</h3>
+      <!-- <h3>[Debug] State information</h3>
       <p>Authorized: {userAuthorized}, Loading: {loadingState}, Error: {componentErrorState}</p>
-    </div>
+    </div> -->
   </LightUpBorder>
 </div>
 
@@ -269,6 +289,11 @@ $: console.log("Colorful", colorfulLoadingState)
   font-weight: bolder;
   text-decoration: none;
 }
+#final-playlist-link {
+  font-weight: bolder;
+  text-decoration: none;
+  color: #1ab44a;
+}
 #inner-container {
   width: 300px;
   margin: auto;
@@ -279,5 +304,16 @@ $: console.log("Colorful", colorfulLoadingState)
 }
 #playlist-input-prompt {
   display: block;
+}
+#playlist-uri-input {
+  margin-top: 5px;
+  color: darkgreen;
+}
+#new-playlist-button {
+  margin: 0 auto;
+}
+.flex-container {
+  justify-content: center;
+  align-items: center;
 }
 </style>
