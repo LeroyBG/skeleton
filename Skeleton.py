@@ -38,28 +38,30 @@ class Skeleton:
         return s
     
     # Configure spotipy
-    def spotipy_init(self, auth_flow):
+    def spotipy_init(self, auth_flow, running_locally: bool, auth_token) -> spotipy.Spotify:
         # Load environment variables from .env file
         load_dotenv()
         scope = 'playlist-modify-private' # So we can generate a new playlist in user's library
         auth_manager = None
 
-        if auth_flow == 'client':
-             auth_manager = SpotifyClientCredentials(
-                client_id=environ["CLIENT_ID"],
-                client_secret=environ["CLIENT_SECRET"],
-            )
-        else:
-            auth_manager = SpotifyOAuth(
-                client_id=environ["CLIENT_ID"],
-                client_secret=environ["CLIENT_SECRET"],
-                redirect_uri=environ["REDIRECT_URI"],
-                scope=scope
+        if running_locally:
+            if auth_flow == 'client':
+                auth_manager = SpotifyClientCredentials(
+                    client_id=environ["CLIENT_ID"],
+                    client_secret=environ["CLIENT_SECRET"],
                 )
+            else:
+                    auth_manager = SpotifyOAuth(
+                    client_id=environ["CLIENT_ID"],
+                    client_secret=environ["CLIENT_SECRET"],
+                    redirect_uri=environ["REDIRECT_URI"],
+                    scope=scope
+                    )
+            sp = spotipy.Spotify(
+                auth_manager=auth_manager)
+        else:
+            sp = spotipy.Spotify(auth=auth_token)
         
-        sp: spotipy.Spotify = spotipy.Spotify(
-            auth_manager=auth_manager
-            )
         return sp
     
     # Initialize properties
@@ -67,9 +69,9 @@ class Skeleton:
     #   - 'auth': for running this as a CLI on your computer, the default
     #   - 'client': for running this on the server, doesn't allow you to read or write playlists
     # Mutates: self.session, self.configured_spotipy
-    def __init__(self, auth_flow='auth') -> None:
+    def __init__(self, auth_token: str, auth_flow='auth', running_locally: bool = True) -> None:
         self.session = self.session_init()
-        self.configured_spotipy = self.spotipy_init(auth_flow=auth_flow)
+        self.configured_spotipy = self.spotipy_init(auth_flow=auth_flow, running_locally=running_locally, auth_token=auth_token)
     
 
     # Get the tracks from a public playlist
