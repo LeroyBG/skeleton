@@ -10,8 +10,8 @@ Skeleton can be run as a command line Python script or a frontend web component 
 #### Environment Configuration
 1. Duplicate the `.env.example`  file in the same directory, replace the example text with your Spotify project details, and rename the file to `.env`.
 2. For usage-specific instructions:
-	- [Command Line](#As A Command Line Tool)
-	- [Server, Frontend Component](#Server, Frontend Component)
+	- [Command Line](#As-A-Command-Line-Tool)
+	- [Server, Frontend Component](#Server,-Frontend-Component)
 #### As A Command Line Tool
 Ideal if you are familiar with Python and only want to use Skeleton on your local machine (i.e., you don't want to embed it into a website).
 
@@ -35,7 +35,7 @@ $ python3 script.py PLAYLIST_URL --name "backbone" --description "the songs that
 - `node.js` and `npm` installed ([instructions](https://nodejs.org/en))
 ##### Frontend Initialization
 The frontend can be used as a standalone site/app or incorporated into another SvelteKit app. The standalone app is useful if you'd like to test Skeleton before incorporating it into your project.
-*Note:* The backend must also be [initialized](#Backend Initialization) for the frontend to work. Initialize the frontend first, so you can supply the frontend url to the backend.
+*Note:* The backend must also be [initialized](#Backend-Initialization) for the frontend to work. Initialize the frontend first, so you can supply the frontend url to the backend.
 
 **Standalone App**
 In `App.svelte`, replace the value of `SKELETON_SERVER_URL`, `SKELETON_CLIENT_ID`, and `SKELETON_REDIRECT_URI` variables with your Spotify Web API details.
