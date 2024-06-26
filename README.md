@@ -11,7 +11,7 @@ Skeleton can be run as a command line Python script or a frontend web component 
 1. Duplicate the `.env.example`  file in the same directory, replace the example text with your Spotify project details, and rename the file to `.env`.
 2. For usage-specific instructions:
 	- [Command Line](#As-A-Command-Line-Tool)
-	- [Server, Frontend Component](#Server,-Frontend-Component)
+	- [Server and Frontend Component](#Server-and-Frontend-Component)
 #### As A Command Line Tool
 Ideal if you are familiar with Python and only want to use Skeleton on your local machine (i.e., you don't want to embed it into a website).
 
@@ -30,7 +30,7 @@ Run the script:
 ```zsh
 $ python3 script.py PLAYLIST_URL --name "backbone" --description "the songs that make my favorite songs"
 ```
-#### Server, Frontend Component
+#### Server and Frontend Component
 **Additional Requisites**
 - `node.js` and `npm` installed ([instructions](https://nodejs.org/en))
 ##### Frontend Initialization
