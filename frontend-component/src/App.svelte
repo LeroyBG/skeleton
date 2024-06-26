@@ -1,11 +1,15 @@
 <script>
-export let SERVER_URL = 'http://localhost:3005';
-import LightUpBorder from "./lib/LightUpBorder.svelte";
+export let SERVER_URL;
+export let CLIENT_ID;
+export let REDIRECT_URI;
+
+import LightUpBorder from "$lib/LightUpBorder.svelte";
 
 // Handle top-level state
 let userAuthorized = false
 let componentErrorState = false
 let loadingState = false
+let unconfigured = !(SERVER_URL && CLIENT_ID && REDIRECT_URI)
 
 
 let colorfulLoadingState = false
@@ -17,9 +21,9 @@ let access_token = null
 let token_expiry = null
 
 const search_params = new URLSearchParams({ // Need to change redirect URI for deployment
-  client_id: "6099c29c775245b99bf238dd9f75c7c9",
+  client_id: CLIENT_ID,
   response_type: "code",
-  redirect_uri: "http://localhost:5173",
+  redirect_uri: REDIRECT_URI,
   scope: "playlist-read-private playlist-modify-private playlist-modify-public"
 })
 let spotify_auth_link = `https://accounts.spotify.com/authorize?${search_params.toString()}`
@@ -114,7 +118,6 @@ const refresh_token = async (old_token) => {
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
-
 const handleComponentRender = async () => {
   console.log('mounting')
   loadingState = true
@@ -167,6 +170,9 @@ const handleComponentRender = async () => {
   loadingState = false
 }
 
+handleComponentRender() 
+
+
 let handlePlaylistLinkSubmit = async (submission) => {
   colorfulLoadingState = true
   let matched = false
@@ -202,10 +208,7 @@ let handlePlaylistLinkSubmit = async (submission) => {
     componentErrorState = true
   }
   colorfulLoadingState = false
-}
-
-handleComponentRender()
-
+}    
 
 $: console.log("Colorful", colorfulLoadingState)
 
@@ -226,7 +229,9 @@ $: console.log("Colorful", colorfulLoadingState)
   >
     <div id="inner-container">
       <h1>Skeleton</h1>
-      {#if userAuthorized}
+      {#if unconfigured}
+      <p style="color: red;">Didn't receive all props or received bad props.</p>
+      {:else if userAuthorized}
         {#if !finalSpotifyPlaylistLink}
           {#if colorfulLoadingState}
             <p>Cooking up a playlist just for you.</p>
