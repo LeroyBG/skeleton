@@ -1,6 +1,4 @@
 <script>
-    import { tick } from "svelte";
-
     export let layersLeft;
     export let totalLayers;
     export let marginSize;
