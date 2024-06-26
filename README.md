@@ -33,9 +33,9 @@ $ python3 script.py PLAYLIST_URL --name "backbone" --description "the songs that
 #### Server, Frontend Component
 **Additional Requisites**
 - `node.js` and `npm` installed ([instructions](https://nodejs.org/en))
-
 ##### Frontend Initialization
 The frontend can be used as a standalone site/app or incorporated into another SvelteKit app. The standalone app is useful if you'd like to test Skeleton before incorporating it into your project.
+*Note:* The backend must also be [initialized](##### Backend Initialization) for the frontend to work. Initialize the frontend first, so you can supply the frontend url to the backend.
 
 **Standalone App**
 In `App.svelte`, replace the value of `SKELETON_SERVER_URL`, `SKELETON_CLIENT_ID`, and `SKELETON_REDIRECT_URI` variables with your Spotify Web API details.
@@ -50,6 +50,15 @@ Run the app:
 $ npm run dev
 ```
 
+**Incorporate Skeleton Into A SvelteKit Project**
+Skeleton can be easily incorporated into a SvelteKit Project.
+1. Copy `EmbedSkeleton.svelte` and `LightUpBorder.svelte` into your project's `lib` folder (located inside the the `src` folder)
+2. *Optional:* Update the import in `EmbedSkeleton.svelte` from `import LightUpBorder from "./LightUpBorder.svelte";` to `import LightUpBorder from $lib/LightUpBorder.svelte`
+	- This isn't required, but it'll insure `EmbedSkeleton` won't break if you move it to a different file
+3. In a `+page.svelte` file, import `EmbedSkeleton` and supply it with the necessary props
+
+**Incorporate Skeleton Into Another (Non-SvelteKit) Website**
+Because Skeleton doesn't require any server-side logic, it can be served as a set of static HTML, CSS, and JavaScript files. This makes it easy to incorporate Skeleton as a page or `<iframe>` in your website, regardless what framework it uses (or if it uses any at all). This requires using the Svelte compiler to compile the `frontend-component` project into an [HTML custom element](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements).
 ##### Backend Initialization
 Make sure the `PORT` and `FRONTEND_URL` environment variables in the `.env` file found the project root are set appropriately. The frontend url is just the base url of the site skeleton is running from, usually `http://localhost:5173`.
 
