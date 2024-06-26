@@ -4,7 +4,7 @@ from urllib.parse import urlparse, ParseResult
 import json
 import Skeleton
 from Skeleton import trackList
-import os
+from os import environ
 from dotenv import load_dotenv
 import random
 import string
@@ -31,14 +31,14 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         state = ''.join(state)
         scope = 'playlist-read-private playlist-modify-private playlist-modify-public'
 
-        querystring = f'https://accounts.spotify.com/authorize?client_id={os.environ['CLIENT_ID']}&response_type=code&redirect_uri={os.environ['REDIRECT_URI']}&state={state}&scope={scope.replace(' ', '+')}'
+        querystring = f'https://accounts.spotify.com/authorize?client_id={environ['CLIENT_ID']}&response_type=code&redirect_uri={environ['REDIRECT_URI']}&state={state}&scope={scope.replace(' ', '+')}'
         print(querystring)
-        os.environ['CLIENT_SECRET']
-        os.environ['REDIRECT_URI']
+        environ['CLIENT_SECRET']
+        environ['REDIRECT_URI']
 
         self.send_response(302)
         self.send_header('Access-Control-Allow-Credentials', 'true')
-        self.send_header('Access-Control-Allow-Origin', 'http://localhost:5173')
+        self.send_header('Access-Control-Allow-Origin', environ["FRONTEND_URL"]')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type")
         self.send_header('Location', querystring)
@@ -48,19 +48,19 @@ class WebRequestHandler(BaseHTTPRequestHandler):
     def GET_authorize(self, url: ParseResult):
         query = url.query
         code = query[(query.index("=") + 1):]
-        credentials = f"{os.environ['CLIENT_ID']}:{os.environ['CLIENT_SECRET']}"
+        credentials = f"{environ['CLIENT_ID']}:{environ['CLIENT_SECRET']}"
         headers = {
             "content-type": "application/x-www-form-urlencoded",
             'Authorization': 'Basic ' + b64encode(credentials.encode()).decode()
         }
         response = requests.post(f"https://accounts.spotify.com/api/token", headers=headers, data={
             "code": code,
-            "redirect_uri": os.environ["REDIRECT_URI"],
+            "redirect_uri": environ["REDIRECT_URI"],
             "grant_type": "authorization_code"
         })
         self.send_response(response.status_code)
         self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", "http://localhost:5173")
+        self.send_header("Access-Control-Allow-Origin", environ["FRONTEND_URL"])
         self.end_headers()
         self.wfile.write(response.text.encode('utf-8'))
         return
@@ -76,7 +76,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         response = json.dumps({"playlist_uri": created_playlist_uri})
         print(response)
         self.send_response(200)
-        self.send_header("Access-Control-Allow-Origin", "http://localhost:5173")
+        self.send_header("Access-Control-Allow-Origin", environ["FRONTEND_URL"])
         self.send_header("Content-Type", "application/json")
         self.end_headers()
         self.wfile.write(response.encode('utf-8'))
@@ -89,7 +89,7 @@ class WebRequestHandler(BaseHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200, "ok")
         self.send_header('Access-Control-Allow-Credentials', 'true')
-        self.send_header('Access-Control-Allow-Origin', 'http://localhost:5173')
+        self.send_header('Access-Control-Allow-Origin', environ["FRONTEND_URL"])
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type, Authorization")
         self.end_headers()
@@ -131,13 +131,13 @@ class WebRequestHandler(BaseHTTPRequestHandler):
         print(jsoned_ids)
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", "http://localhost:5173")
+        self.send_header("Access-Control-Allow-Origin", environ["FRONTEND_URL"])
         self.end_headers()
         self.wfile.write(jsoned_ids.encode('utf-8'))
 
 if __name__ == "__main__":
     # TODO: Let user specify port
     load_dotenv()
-    server = HTTPServer(("localhost", 3005), WebRequestHandler)
+    server = HTTPServer(("localhost", int(environ["SERVER_PORT"])), WebRequestHandler)
     print("Serving on port", server.server_port)
     server.serve_forever()

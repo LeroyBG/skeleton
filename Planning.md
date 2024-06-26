@@ -17,4 +17,6 @@ I have a command-line tool (almost) working. You put your playlist link into the
 Currently, the goal is to modularize Skeleton.py so I can extract all the useful bits.
 
 ## TODO
-- Make logging option in Skeleton
+- Make logging optional in Skeleton
+- add server-side route for refreshing tokens
+- Add ability to analyze albums, individual songs

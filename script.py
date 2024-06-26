@@ -7,13 +7,12 @@ import argparse
             
 def get_playlist_details() -> str | None: 
         parser: argparse.ArgumentParser = argparse.ArgumentParser(
-            prog="Skeleton", 
             description="A command-line tool for finding the samples from your favorite songs",
             )
 
         parser.add_argument("PLAYLIST_URL", action="store", help="Link to existing Spotify playlist")
-        parser.add_argument("--new_playlist_name", "-n", action="store")
-        parser.add_argument("--new_playlist_description", "-d", action="store")
+        parser.add_argument("--name", "-n", action="store")
+        parser.add_argument("--description", "-d", action="store")
         args: argparse.Namespace = parser.parse_args()
         print(args)
         return args.PLAYLIST_URL, args.new_playlist_name, args.new_playlist_description
