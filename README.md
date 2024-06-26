@@ -67,3 +67,6 @@ Start the server:
 $ python3 server.py
 ```
 This should output "Serving on port \[your server port]\".
+
+#### Acknowledgement
+Christopher Pease's article, [Automating Finding Music Samples on Spotify with WhoSampled](https://medium.com/@chris.m.pease/automating-finding-music-samples-on-spotify-with-whosampled-54f86bcda1ee), was very helpful for creating this project
