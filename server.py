@@ -1,143 +1,75 @@
-# Server for interacting with Skeleton through HTTP requests
-from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import urlparse, ParseResult
-import json
-import Skeleton
-from Skeleton import trackList
+from aiohttp import web, ClientSession
 from os import environ
-from dotenv import load_dotenv
-import random
-import string
-import requests
 from base64 import b64encode
-import json
+import Skeleton
 
-def convert_json_to_trackList(json_trackList) -> trackList | None:
-    parsed = json.loads(json_trackList)
-    if 'tracks' not in parsed:
-        return None
-    
-    tracks: trackList = []
-    for t in parsed['tracks']:
-        tracks.append( (t['title'], t['artist']) )
+routes = web.RouteTableDef()
 
-    return tracks
-
-class WebRequestHandler(BaseHTTPRequestHandler):
-    # Routes
-    # "/"
-    def GET_root(self):
-        state = random.choices(string.ascii_letters + string.digits, k=16) # Random string for code state
-        state = ''.join(state)
-        scope = 'playlist-read-private playlist-modify-private playlist-modify-public'
-
-        querystring = f'https://accounts.spotify.com/authorize?client_id={environ['CLIENT_ID']}&response_type=code&redirect_uri={environ['REDIRECT_URI']}&state={state}&scope={scope.replace(' ', '+')}'
-        print(querystring)
-        environ['CLIENT_SECRET']
-        environ['REDIRECT_URI']
-
-        self.send_response(302)
-        self.send_header('Access-Control-Allow-Credentials', 'true')
-        self.send_header('Access-Control-Allow-Origin', environ["FRONTEND_URL"]')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type")
-        self.send_header('Location', querystring)
-        self.end_headers()
-        return
-    
-    def GET_authorize(self, url: ParseResult):
-        query = url.query
-        code = query[(query.index("=") + 1):]
+@routes.get('/authorize')
+async def auth(request: web.Request):
+    print("someone wants auth")
+    async with ClientSession() as session:
+        print("Someone wants auth")
+        code = request.query["code"]
         credentials = f"{environ['CLIENT_ID']}:{environ['CLIENT_SECRET']}"
         headers = {
-            "content-type": "application/x-www-form-urlencoded",
-            'Authorization': 'Basic ' + b64encode(credentials.encode()).decode()
+                "content-type": "application/x-www-form-urlencoded",
+                'Authorization': 'Basic ' + b64encode(credentials.encode()).decode()
         }
-        response = requests.post(f"https://accounts.spotify.com/api/token", headers=headers, data={
+        data = {
             "code": code,
             "redirect_uri": environ["REDIRECT_URI"],
             "grant_type": "authorization_code"
+        }
+        req_url = f"https://accounts.spotify.com/api/token"
+        async with session.post(req_url, headers=headers, data=data) as res:
+            if res.status != 200:
+                print(res)
+                return web.Response(status=500)
+            data = await res.json()
+            response_headers = {
+                "Access-Control-Allow-Origin": environ["FRONTEND_URL"]
+            }
+            return web.json_response(headers=response_headers, data=data)
+
+@routes.get('/samples')
+async def samples(request: web.Request):
+    print("Someone wants samples")
+    async with ClientSession() as session:
+        playlist_uri = request.query["playlist_id"]
+        token = request.headers["Authorization"]
+        playlist_uri = await Skeleton.Skeleton(verbose=True).make_sample_playlist(
+            resource_uri = playlist_uri,
+            session = session,
+            token = token,
+        )
+        return web.json_response(data={
+                "playlist_uri": playlist_uri
+            }, status=200, headers={
+                "Access-Control-Allow-Credentials": "true",
+                "Access-Control-Allow-Origin": environ["FRONTEND_URL"],
+                "Access-Control-Allow-Method": "GET, POST, OPTIONS",
+                "Access-Control-Allow-Headers": "X-Requested-With, Content-type, Authorization"
         })
-        self.send_response(response.status_code)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", environ["FRONTEND_URL"])
-        self.end_headers()
-        self.wfile.write(response.text.encode('utf-8'))
-        return
 
-    def GET_samples(self, url: ParseResult):
-        query = url.query
-        playlist_id = query[(query.index("=") + 1):]
-        auth_token = self.headers["Authorization"]
-        print(auth_token)
-        skeleton = Skeleton.Skeleton(auth_token=auth_token, auth_flow='auth', running_locally=False)
-        created_playlist_uri = skeleton.make_sample_playlist(playlist_url=playlist_id)
-        print(created_playlist_uri)
-        response = json.dumps({"playlist_uri": created_playlist_uri})
-        print(response)
-        self.send_response(200)
-        self.send_header("Access-Control-Allow-Origin", environ["FRONTEND_URL"])
-        self.send_header("Content-Type", "application/json")
-        self.end_headers()
-        self.wfile.write(response.encode('utf-8'))
-        return
+@routes.options('/samples')
+async def options(request: web.Request):
+    print("Preflight!")
+    return web.Response(
+        status=200,
+        headers={
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Allow-Origin": environ["FRONTEND_URL"],
+            "Access-Control-Allow-Method": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "X-Requested-With, Content-type, Authorization"
+        }
+    )
 
-    # Util
-    def url(self):
-        return urlparse(self.path)
-    
-    def do_OPTIONS(self):
-        self.send_response(200, "ok")
-        self.send_header('Access-Control-Allow-Credentials', 'true')
-        self.send_header('Access-Control-Allow-Origin', environ["FRONTEND_URL"])
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header("Access-Control-Allow-Headers", "X-Requested-With, Content-type, Authorization")
-        self.end_headers()
-    
-    def do_GET(self): # Sign in with spotify
-        url = self.url()
-        match url.path:                
-            case "/authorize":
-                self.GET_authorize(url)
-            case "/samples":
-                self.GET_samples(url)
-                
-        
+@routes.get("/")
+async def fallback(request):
+    print("Fallback", request)
+    return web.Response(500)
 
-    # A get request receives a list of songs and sends a list of samples back
-    def do_POST(self):
-        try:
-            req_len = int(self.headers["Content-Length"])
-        except:
-            # TODO: Send informative request
-            self.send_response(404)
-            return
-        body = self.rfile.read(req_len)
-        tracks: trackList | None = convert_json_to_trackList(body)
-        print(tracks)
-        if trackList == None:
-            # Send informative request
-            self.send_response(404)
-            return
-        
-        s = Skeleton.Skeleton(auth_flow='client')
-        sample_ids: list[str] | None = s.get_sample_ids_from_trackList(tracks)
-        if sample_ids == None:
-            # Send informative response
-            self.send_response(404)
-            return
-        
-        jsoned_ids: str = json.dumps(sample_ids)
-        print(jsoned_ids)
-        self.send_response(200)
-        self.send_header("Content-Type", "application/json")
-        self.send_header("Access-Control-Allow-Origin", environ["FRONTEND_URL"])
-        self.end_headers()
-        self.wfile.write(jsoned_ids.encode('utf-8'))
-
-if __name__ == "__main__":
-    # TODO: Let user specify port
-    load_dotenv()
-    server = HTTPServer(("localhost", int(environ["SERVER_PORT"])), WebRequestHandler)
-    print("Serving on port", server.server_port)
-    server.serve_forever()
+app = web.Application()
+app.add_routes(routes)
+web.run_app(app)

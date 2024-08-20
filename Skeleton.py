@@ -1,33 +1,23 @@
-# Skeleton source
 # Source code for Skeleton Python module
 # Author: Leroy Betterton Gage
 # Email: leroylightning at ucla dot edu
-
-import requests.adapters
-from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
-import spotipy
-from dotenv import load_dotenv
-from os import environ
-import requests
-from bs4 import BeautifulSoup
+import urllib.parse
+import aiohttp
 import re
+from bs4 import BeautifulSoup
 import random
+import json
+import urllib
+import logging
 
-type trackList = list[tuple[str, str]]
-# Tuple containing a tracklist, user_id, and original playlist name
-type spotify_playlist_details = tuple[trackList, str, str]
+# Track name, artist name
+type track = tuple[str, str]
 class Skeleton:
-    # Properties:
-    session: requests.Session | None = None
-    configured_spotipy: spotipy.Spotify | None = None
-
-    # Configure request session thingy
-    def session_init(self) -> requests.Session:
-        s = requests.Session()
-        a = requests.adapters.HTTPAdapter(max_retries=10)
-        s.mount('https://', a)
-        s.mount('http://', a)
-        s.headers = {
+    scraping_headers: dict
+    logger: logging.Logger | None
+    MAX_RETRIES: int
+    def __init__(self, verbose: bool = False):
+        self.scraping_headers = {
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Referer": "https://www.whosampled.com/",
             "Sec-Fetch-Dest": "document",
@@ -35,91 +25,110 @@ class Skeleton:
             "Sec-Fetch-Site": "same-origin",
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.1 Safari/605.1.15"
         }
-        return s
-    
-    # Configure spotipy
-    def spotipy_init(self, auth_flow, running_locally: bool, auth_token) -> spotipy.Spotify:
-        # Load environment variables from .env file
-        load_dotenv()
-        scope = 'playlist-modify-private' # So we can generate a new playlist in user's library
-        auth_manager = None
+        self.logger = None
+        if verbose:
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(logging.Formatter(
+                "{name} - {levelname}: {message}",
+                style="{"
+            ))
+            self.logger = logging.getLogger(__name__)
+            self.logger.addHandler(console_handler)
+            self.logger.setLevel(logging.INFO)
+            self.logger.info("Here we go!")
+        self.MAX_RETRIES = 10
+        pass
 
-        if running_locally:
-            if auth_flow == 'client':
-                auth_manager = SpotifyClientCredentials(
-                    client_id=environ["CLIENT_ID"],
-                    client_secret=environ["CLIENT_SECRET"],
-                )
+    def close(self):
+        # Kill event loop, session
+        pass
+    def __exit__(self):
+        self.close()
+    
+    # Given a link, determine if it's a song, album, or playlist
+    # Also return resource URI
+    def extract_resource_type_and_uri(self, uri: str):
+        if self.logger:
+            self.logger.info(f"Extracting uri from {uri}")
+        p_string = r'.*spotify.com/(?P<resource_type>track|album|playlist)/(?P<id>\w+).*'
+        pattern = re.compile(p_string)
+        match = pattern.match(uri)
+        if not match:
+            if self.logger:
+                self.logger.error(f"uri didn't match regex. uri: {uri}")
+            raise ValueError('Received a uri with bad resource type', uri)
+        result_dict = match.groupdict()
+        resource_type, id = result_dict['resource_type'], result_dict['id']
+        if self.logger:
+            self.logger.info(f"Extracted resource type: {resource_type} and id: {id}")
+        return (resource_type, id)
+        
+    def scrub_feature_from_track_title(self, track_name: str) -> str:
+        feature_pattern = re.compile(r'.*\((feat|with).*', re.IGNORECASE)
+        if feature_pattern.match(track_name):
+            scrub_pattern = re.compile(r'(?P<scrubbed>.*)\((feat|with).*')
+            return scrub_pattern.match(track_name).groupdict()['scrubbed'].strip()
+        return track_name
+
+    # Get the tracks from a playlist, album, or single song
+    # Returns the track list and resource name
+    async def get_spotify_resource_details(self, resource_id: str,
+                                           resource_type: str,
+                                           session: aiohttp.ClientSession,
+                                           token: str) -> tuple[list[track], str] | None:
+        print('getting resource details', bool(self.logger))
+        if self.logger:
+            self.logger.info(f"Getting resource name and tracks for {resource_type} with id: {resource_id}")
+        get_url = f'https://api.spotify.com/v1/{resource_type}s/{resource_id}'
+        headers = {
+            "Authorization": 'Bearer ' + token
+        }
+        for i in range(self.MAX_RETRIES):
+            async with session.get(get_url, headers=headers) as res:
+                if res.status != 200:
+                    if self.logger:
+                        self.logger.warning(f"Request {i + 1} for spotify resource failed")
+                        if i == self.MAX_RETRIES - 1:
+                            self.logger.error(f"Couldn't get resource name and tracks for {resource_type} with id: {resource_id}\n{res}")
+
+                    continue
+                data: dict = await res.json()
+            resource_name = data["name"]
+            tracks = []
+            if resource_type == 'track':
+                artist_name = data["artists"][0]["name"]
+                tracks = [(resource_name, artist_name)]
             else:
-                    auth_manager = SpotifyOAuth(
-                    client_id=environ["CLIENT_ID"],
-                    client_secret=environ["CLIENT_SECRET"],
-                    redirect_uri=environ["REDIRECT_URI"],
-                    scope=scope
-                    )
-            sp = spotipy.Spotify(
-                auth_manager=auth_manager)
-        else:
-            sp = spotipy.Spotify(auth=auth_token)
-        
-        return sp
-    
-    # Initialize properties
-    # Auth flow can be either 'client' or 'auth'
-    #   - 'auth': for running this as a CLI on your computer, the default
-    #   - 'client': for running this on the server, doesn't allow you to read or write playlists
-    # Mutates: self.session, self.configured_spotipy
-    def __init__(self, auth_token: str, auth_flow='auth', running_locally: bool = True) -> None:
-        self.session = self.session_init()
-        self.configured_spotipy = self.spotipy_init(auth_flow=auth_flow, running_locally=running_locally, auth_token=auth_token)
-    
+                for item in data["tracks"]["items"]:
+                    track = item
+                    if resource_type == "playlist":
+                        track = item["track"]
+                    scrubbed_track_name = self.scrub_feature_from_track_title(track["name"])
+                    tracks.append( (scrubbed_track_name, track["artists"][0]) )
+            if self.logger:
+                self.logger.info(f"Got track list and {resource_type} name. \nTracks: {tracks}")
+            trimmed_tracks = [(t[0], t[1]["name"]) for t in tracks]
+            return resource_name, trimmed_tracks
+        return None
 
-    # Get the tracks from a public playlist
-    # Returns a list of (song_name, artist_name) tuples if successful, otherwise none
-    def get_playlist_details(self, playlist_url: str) -> spotify_playlist_details | None:
-        # Parse playlist link
-        # Note: If the structure of a 'Share Playlist' link changes, this parsing will break
-        try:
-            before_id: str = '/playlist/'
-            offset: int = len(before_id)
-            start_ind: int = playlist_url.index('/playlist/') + offset
-            end_ind = playlist_url.index('?')
-            id: str = playlist_url[start_ind:end_ind]
-        except ValueError:
-            return None
-        
-        # Limit is a huge number for now
-        # TODO: Increase limit
-        result: dict = self.configured_spotipy.playlist(id, additional_types="track")
-        if 'tracks' in result and 'items' in result['tracks']:
-            songs: list[dict] = result['tracks']['items']
-        # We can safely assume these properties are in the dict as well
-        user_id = result['owner']['id']
-        original_playlist_name = result['name']
-        title_and_artist = []
-        for s in songs:
-            track: dict = s["track"]
-            name: str = track["name"]
-            primary_artist: str = track["artists"][0]["name"]
-            title_and_artist.append( (name, primary_artist) )
-        return title_and_artist, user_id, original_playlist_name
-
-
-    # Get the whosampled page for your song, if it exists
-    # Three possible results
-    # 1. No page for your song
-    # 2. Page for your song, but it doesn't contain samples
-    # 3. Page for your song and it contains samples
-    def get_whosampled_page_url(self, song_name: str, artist_name: str) -> str | None:
-        # Note: very reliant on whosampled query url structure. 
-        # If it changes, this app will break
+    async def get_track_whosampled_page_url(self, track_name: str,
+                                            artist_name: str,
+                                            session: aiohttp.ClientSession) -> str | None:
         whosampled_search_url: str = 'https://www.whosampled.com/search/tracks'
-        query_str: str = f'{whosampled_search_url}/?q={(song_name + '%20' + artist_name).replace(' ', '%20')}'
-        response = self.session.get(query_str)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
+        get_url: str = f'{whosampled_search_url}/?q={(track_name + ' ' + artist_name).replace(' ', '+')}'
+        if self.logger:
+            self.logger.info(f"Getting whosampled page for track {track_name} by {artist_name}. \nRequest url: {get_url}")
+        for i in range(self.MAX_RETRIES):
+            async with session.get(get_url, headers=self.scraping_headers) as res:
+                # No retries, for now
+                if res.status != 200:
+                    self.logger.warning(f"Request {i + 1} failed")
+                    if i == self.MAX_RETRIES - 1:
+                        self.logger.error(f"Couldn't get whosampled page url for track {track_name} by {artist_name}")
+                    continue
+                soup = BeautifulSoup(await res.text(), 'html.parser')
+                break
         matches = soup.find_all('li', class_='trackEntry')
-
         found_song_name = None
         found_song_artist = None
         url = None
@@ -128,22 +137,38 @@ class Skeleton:
                 found_song_name: str = m.span.a.string
                 found_song_artist: str = m.span.span.a.string
 
-                if song_name.lower() in found_song_name.lower().strip() and artist_name.lower() in found_song_artist.lower().strip():
+                if track_name.lower() in found_song_name.lower().strip() and artist_name.lower() in found_song_artist.lower().strip():
                     url = f'https://whosampled.com{m.span.a.get('href')}' 
                     break
 
             except AttributeError: # We'll get an attributeerror if we parse too deep
                 pass
-        
+        if self.logger:
+            self.logger.info(f"Got whosampled page url for track {track_name} by {artist_name}: {url}")
         return url
 
     # If song contains more than 3 samples, we will need to go to a new page
-    def get_whosampled_sample_list(self, song_page_url: str) -> trackList | None:
-        response = self.session.get(song_page_url)
-        soup = BeautifulSoup(response.text, 'html.parser')
-
+    async def get_whosampled_sample_list(self, song_page_url: str,
+                                         session: aiohttp.ClientSession) -> list[track] | None:
+        if self.logger:
+            self.logger.info(f"Getting sample list for track with whosampled page url: {song_page_url}")
+        soup = None
+        for i in range(self.MAX_RETRIES):
+            async with session.get(song_page_url, headers=self.scraping_headers) as response:
+                if response.status != 200:
+                    if self.logger:
+                        self.logger.warning(f"Sample page request {i + 1} failed")
+                    continue
+                soup = BeautifulSoup(await response.text(), 'html.parser')
+                break
+        if not soup:
+            if self.logger:
+                self.logger.error(f"Couldn't get a response when request whosampled page for song with url {song_page_url} ")
+            return None
         header = soup.find('h3', string=re.compile('Contains sample.*'))
         if not header:
+            if self.logger:
+                self.logger.info(f"Reached whosampled page for song {song_page_url} but it doesn't have any samples")
             return None
         p = re.compile('Contains samples of ([0-9]+) songs?') # Get the number of samples
 
@@ -151,7 +176,8 @@ class Skeleton:
             m = p.match(header.string)
             num_samples = int(m.group(1))
         except:
-            print("Couldn't determine number of samples")
+            if self.logger:
+                self.logger.error(f"Couldn't determine number of samples for song with url {song_page_url}")
         
         section_container = header.parent.parent
 
@@ -161,13 +187,24 @@ class Skeleton:
         else:
             more_samples_btn = section_container.find("a", class_="btn")
             song_samples_page_link = 'https://www.whosampled.com' + more_samples_btn.get("href")
-            print('This song has a lot of samples. Getting the samples page')
-            response = self.session.get(song_samples_page_link)
-
-            sample_soup = BeautifulSoup(response.text, 'html.parser')
-            # Notice that the 'Contains sample' text is found in an h2 element in the standalone sample page
+            if self.logger:
+                self.logger.info(f'The song at {song_page_url} has a lot of samples. Getting the samples page')
+            for i in range(self.MAX_RETRIES):
+                async with session.get(song_samples_page_link, headers=self.scraping_headers) as response:
+                    if response.status != 200:
+                        if self.logger:
+                            self.logger.warning(f"Request {i + 1} for additional sample page failed")
+                        if self.logger and i == self.MAX_RETRIES - 1:
+                            self.logger.error(f"Couldn't get additional sample page from {song_samples_page_link}")
+                            return None
+                        continue
+                    sample_soup = BeautifulSoup(await response.text(), 'html.parser')
+                    break
+                # Notice that the 'Contains sample' text is found in an h2 element in the standalone sample page
             header = sample_soup.find('h2', string=re.compile('Contains sample.*'))
             if not header:
+                if self.logger:
+                    self.logger.info(f"Reached additional whosampled page at {song_samples_page_link} but it doesn't have any samples")
                 return None
             
             section_container = header.parent.parent
@@ -200,92 +237,159 @@ class Skeleton:
     
     # Create a Playlist for the user and return the url as a string
     # Returns playlist_id, final_playlist_uri
-    def create_playlist_for_user(self, original_playlist_name: str, 
-                                user_id: str, playlist_name:str|None=None, 
-                                playlist_description:str|None=None) -> str | None:
-             
-        new_playlist_name =  playlist_name if playlist_name is not None else self.get_random_skeleton_playlist_name(original_playlist_name)
+    async def create_playlist_for_user(self, original_resource_name: str, 
+                                       user_id: str,  token: str,
+                                       session: aiohttp.ClientSession,
+                                       playlist_name: str|None=None, 
+                                       playlist_description: str|None=None) -> str | None:
+        new_playlist_name =  playlist_name if playlist_name is not None else self.get_random_skeleton_playlist_name(original_resource_name)
         description = playlist_description if playlist_description is not None else "made with Skeleton :)"
-
-        response = self.configured_spotipy.user_playlist_create(user_id, name=new_playlist_name, public=False, description=description)
-
-        if 'uri' in response:
-            return response['id'], response['uri']
-        
+        post_url = f'https://api.spotify.com/v1/users/{user_id}/playlists'
+        headers = {
+            "Authorization": 'Bearer ' + token,
+            "Content-Type": "application/json"
+        }
+        body = json.dumps({
+            "name": new_playlist_name,
+            "description": description,
+            "public": False
+        })
+        if self.logger:
+            self.logger.info(f"Creating a playlist for user {user_id} called {new_playlist_name} with description {description}")
+        for i in range(self.MAX_RETRIES):
+            async with session.post(post_url, data=body, headers=headers) as res:
+                # No troubleshooting
+                if res.status != 201:
+                    if self.logger:
+                        self.logger.warning(f"Attempt {i + 1} to create a playlist failed")
+                    if self.logger and i == self.MAX_RETRIES - 1:
+                        self.logger.error(f"Couldn't create playlist for user {user_id}")
+                    return None
+                data = await res.json()
+                break
+        if 'uri' in data:
+            if self.logger:
+                self.logger.info(f"created a playlist with name {new_playlist_name} for user {user_id}")
+            return data['id'], data['uri']
         return None
-
+    
     # Get the spotify id of a song from its name and artist
-    def get_song_spotify_id(self, song_name: str, artist_name: str) -> str | None:
-        query_str = f'track:{song_name} artist:{artist_name}'
-        response: dict = self.configured_spotipy.search(q=query_str, limit=1, type='track')
+    async def get_track_spotify_uri(self, song_name: str,
+                                   artist_name: str,
+                                   session: aiohttp.ClientSession,
+                                   token: str) -> str | None:
+        if self.logger:
+            self.logger.info(f"getting uri for {song_name} by {artist_name}")
+        formatted_query = (f'track:{song_name} artist:{artist_name}')
+        req_url = 'https://api.spotify.com/v1/search?type=track&limit=1&q=' + formatted_query
+        headers = {
+            "Authorization": 'Bearer ' + token,
+        }
+        if self.logger:
+            self.logger.info(f"Getting spotify uri for {song_name} by {artist_name}")
+        for i in range(self.MAX_RETRIES):
+            async with session.get(req_url, headers=headers) as res:
+                if res.status != 200:
+                    if self.logger:
+                        self.logger.info(f"Request {i + 1} to create a playlist failed")
+                    if self.logger and i == self.MAX_RETRIES - 1:
+                        self.logger.error(f"Couldn't get uri for {song_name} by {artist_name}")
+                        return None
+                    continue
+                data = await res.json()
+                break
 
-        if 'tracks' in response and 'items' in response['tracks'] and len(response['tracks']['items']):
-            found_song = response['tracks']['items'][0]
+        if 'tracks' in data and 'items' in data['tracks'] and len(data['tracks']['items']):
+            found_song = data['tracks']['items'][0]
             found_song_name: str = found_song['name']
             found_song_artists: list[str] = [a['name'] for a in found_song['artists']]
-            song_name_match = found_song_name.lower() in song_name.lower() or song_name.lower() in found_song_name.lower()
+            if not (found_song_name.lower() in song_name.lower() or song_name.lower() in found_song_name.lower()):
+                return None
             song_artist_match = False
             for a in found_song_artists:
                 if artist_name.lower() in a.lower() or a.lower() in artist_name.lower():
                     song_artist_match = True
                     break
-            if song_name_match and song_artist_match:
-                return found_song['id']
+            if song_artist_match:
+                return found_song['uri']
     
-    # Get sample ids from a tracklist
-    # Ideal for a server because it does most of the work that make_sample_playlist does,
-    # but doesn't create or read playlists
-    # Returns a list of ids
-    def get_sample_ids_from_trackList(self, tracks: trackList) -> list[str] | None:
-        playlist_sample_ids = []
-        for t in tracks:
-            ws_page_url: str | None = self.get_whosampled_page_url(song_name=t[0], artist_name=t[1])
-            # print(f"{t[0]}'s whosampled page url: {ws_page_url}")
+    async def make_sample_playlist(self, resource_uri: str,
+                                   session: aiohttp.ClientSession, token: str,
+                                   playlist_name: str | None = None, 
+                                   user_id: str | None = None,
+                                   playlist_description: str | None = None) -> str | None:
+        resource_type, resource_id = self.extract_resource_type_and_uri(resource_uri)
+        result = await self.get_spotify_resource_details(resource_id, 
+                                                         resource_type,
+                                                         session, token)
+        if not result:
+            return None
+        resource_name, tracks = result
+        if self.logger:
+            self.logger.info(f"got all the {resource_type} details out of the way")
+        new_song_uris = []
+        sample_data_structure: dict = {t: None for t in tracks}
+        for track_name, artist in tracks:
+            ws_page_url: str | None = await self.get_track_whosampled_page_url(track_name=track_name, artist_name=artist, session=session)
             if ws_page_url == None:
                 continue
             
-            sample_list: trackList | None = self.get_whosampled_sample_list(ws_page_url)
+            sample_list: list[track] | None = await self.get_whosampled_sample_list(ws_page_url, session=session)
+            sample_data_structure[(track_name, artist)] = sample_list
+            if self.logger:
+                self.logger.info(f"got a sample list for {track_name} by {artist}")
             if sample_list == None:
                 continue
-            
             for s in sample_list:
-                id = self.get_song_spotify_id(song_name=s[0], artist_name=s[1])
-                if id is not None:
-                    playlist_sample_ids.append(id)
-        return None if  len(playlist_sample_ids) == 0 else playlist_sample_ids
-    
-    # Make a new playlist with all the samples from the old one
-    # Return the new playlist's url (or None if failure)
-    def make_sample_playlist(self, playlist_url: str, playlist_name:str|None=None, playlist_description:str|None=None) -> str | None:
-        details = self.get_playlist_details(playlist_url)
-        if not details:
+                uri = await self.get_track_spotify_uri(song_name=s[0], artist_name=s[1], session=session, token=token)
+                if uri is not None:
+                    new_song_uris.append(uri)
+        if self.logger:
+            self.logger.info("Got all samples")
+        if len(new_song_uris) == 0:
+            print("no new uris!")
             return None
-        tracks, user_id, original_playlist_name = details
-        new_song_ids = []
-        for t in tracks:
-            print(f"Current track: {t[0]} by {t[1]}")
-            ws_page_url: str | None = self.get_whosampled_page_url(song_name=t[0], artist_name=t[1])
-            # print(f"{t[0]}'s whosampled page url: {ws_page_url}")
-            if ws_page_url == None:
-                continue
-            
-            sample_list: trackList | None = self.get_whosampled_sample_list(ws_page_url)
-            if sample_list == None:
-                continue
-            
-            for s in sample_list:
-                id = self.get_song_spotify_id(song_name=s[0], artist_name=s[1])
-                if id is not None:
-                    new_song_ids.append(id)
-        
-        if len(new_song_ids) > 0:
-            playlist_id, playlist_url = self.create_playlist_for_user(original_playlist_name=original_playlist_name,
-                                                                    user_id=user_id, 
-                                                                    playlist_name=playlist_name, 
-                                                                    playlist_description=playlist_description)
-            
-            self.configured_spotipy.playlist_add_items(playlist_id=playlist_id, items=new_song_ids)
-
-            return playlist_url
-        else:
-            return None
+        print(sample_data_structure)
+        if not user_id:
+            headers = {
+                "Authorization": 'Bearer ' + token,
+            }
+            self.logger.info("Getting current user's user id")
+            print("does this print twice")
+            for i in range(self.MAX_RETRIES):
+                async with session.get('https://api.spotify.com/v1/me', headers=headers) as res:
+                    if self.logger and res.status != 200:
+                        self.logger.warning(f"Request {i + 1} for user profile failed")
+                    if i == self.MAX_RETRIES - 1:
+                        if self.logger:
+                            self.logger.error("Couldn't get user id of currently signed-in user")
+                        return None
+                    data = await res.json()
+                    user_id = data["id"]
+                    break
+        playlist_id, playlist_url = await self.create_playlist_for_user(original_resource_name=resource_name,
+                                                                user_id=user_id, 
+                                                                playlist_name=playlist_name, 
+                                                                playlist_description=playlist_description,
+                                                                token=token, session=session)
+        headers = {
+            "Authorization": 'Bearer ' + token,
+        }
+        body = {
+            "uris": new_song_uris
+        }
+        put_url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
+        print(token)
+        if self.logger:
+            self.logger.info(f"adding tracks {body} to playlist {playlist_id}")
+        for i in range(self.MAX_RETRIES):
+            async with session.put(put_url, headers=headers, json=body) as res:
+                if res.status != 200:
+                    if self.logger:
+                        self.logger.warning(f"Request to add tracks to {playlist_id} failed")
+                    if i == self.MAX_RETRIES - 1:
+                        if self.logger:
+                            self.logger.error(f"Couldn't add songs to playlist {playlist_id}")
+                        return None
+                    continue
+        return playlist_url
