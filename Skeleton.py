@@ -12,6 +12,7 @@ import logging
 
 # Track name, artist name
 type track = tuple[str, str]
+# type samples_ds -- -- -- do this later
 class Skeleton:
     scraping_headers: dict
     logger: logging.Logger | None
@@ -38,12 +39,6 @@ class Skeleton:
             self.logger.info("Here we go!")
         self.MAX_RETRIES = 10
         pass
-
-    def close(self):
-        # Kill event loop, session
-        pass
-    def __exit__(self):
-        self.close()
     
     # Given a link, determine if it's a song, album, or playlist
     # Also return resource URI
@@ -64,19 +59,20 @@ class Skeleton:
         return (resource_type, id)
         
     def scrub_feature_from_track_title(self, track_name: str) -> str:
-        feature_pattern = re.compile(r'.*\((feat|with).*', re.IGNORECASE)
+        
+        feature_pattern = re.compile(r'.*\((feat|with|ft).*', re.IGNORECASE)
         if feature_pattern.match(track_name):
-            scrub_pattern = re.compile(r'(?P<scrubbed>.*)\((feat|with).*')
+            scrub_pattern = re.compile(r'(?P<scrubbed>.*)\((feat|with|ft).*')
             return scrub_pattern.match(track_name).groupdict()['scrubbed'].strip()
         return track_name
 
     # Get the tracks from a playlist, album, or single song
     # Returns the track list and resource name
+    # TODO: Make this function better...
     async def get_spotify_resource_details(self, resource_id: str,
                                            resource_type: str,
                                            session: aiohttp.ClientSession,
-                                           token: str) -> tuple[list[track], str] | None:
-        print('getting resource details', bool(self.logger))
+                                           token: str) -> tuple[str, list[track]] | None:
         if self.logger:
             self.logger.info(f"Getting resource name and tracks for {resource_type} with id: {resource_id}")
         get_url = f'https://api.spotify.com/v1/{resource_type}s/{resource_id}'
@@ -98,6 +94,8 @@ class Skeleton:
             if resource_type == 'track':
                 artist_name = data["artists"][0]["name"]
                 tracks = [(resource_name, artist_name)]
+                # This is ugly...
+                trimmed_tracks = [(self.scrub_feature_from_track_title(t[0]), t[1]) for t in tracks]
             else:
                 for item in data["tracks"]["items"]:
                     track = item
@@ -105,9 +103,10 @@ class Skeleton:
                         track = item["track"]
                     scrubbed_track_name = self.scrub_feature_from_track_title(track["name"])
                     tracks.append( (scrubbed_track_name, track["artists"][0]) )
+                    trimmed_tracks = [(t[0], t[1]["name"]) for t in tracks]
             if self.logger:
                 self.logger.info(f"Got track list and {resource_type} name. \nTracks: {tracks}")
-            trimmed_tracks = [(t[0], t[1]["name"]) for t in tracks]
+                
             return resource_name, trimmed_tracks
         return None
 
@@ -237,12 +236,11 @@ class Skeleton:
     
     # Create a Playlist for the user and return the url as a string
     # Returns playlist_id, final_playlist_uri
-    async def create_playlist_for_user(self, original_resource_name: str, 
+    async def create_playlist_for_user(self,
                                        user_id: str,  token: str,
                                        session: aiohttp.ClientSession,
-                                       playlist_name: str|None=None, 
+                                       new_playlist_name: str|None=None, 
                                        playlist_description: str|None=None) -> str | None:
-        new_playlist_name =  playlist_name if playlist_name is not None else self.get_random_skeleton_playlist_name(original_resource_name)
         description = playlist_description if playlist_description is not None else "made with Skeleton :)"
         post_url = f'https://api.spotify.com/v1/users/{user_id}/playlists'
         headers = {
@@ -313,49 +311,63 @@ class Skeleton:
             if song_artist_match:
                 return found_song['uri']
     
+    # Make a playlist containing all the samples from the original supplied playlist
+    # Also return a data structure containing each track and the samples for that track
     async def make_sample_playlist(self, resource_uri: str,
                                    session: aiohttp.ClientSession, token: str,
                                    playlist_name: str | None = None, 
                                    user_id: str | None = None,
                                    playlist_description: str | None = None) -> str | None:
+        FAILURE_RESPONSE = None, None, None, None
+        EMPTY_RESPONSE = None, []#, original resource name
         resource_type, resource_id = self.extract_resource_type_and_uri(resource_uri)
         result = await self.get_spotify_resource_details(resource_id, 
                                                          resource_type,
                                                          session, token)
         if not result:
-            return None
+            return FAILURE_RESPONSE
         resource_name, tracks = result
+        new_playlist_name =  self.get_random_skeleton_playlist_name(resource_name)
         if self.logger:
             self.logger.info(f"got all the {resource_type} details out of the way")
         new_song_uris = []
-        sample_data_structure: dict = {t: None for t in tracks}
+        sample_data_structure: samples_ds = []
         for track_name, artist in tracks:
             ws_page_url: str | None = await self.get_track_whosampled_page_url(track_name=track_name, artist_name=artist, session=session)
             if ws_page_url == None:
                 continue
             
             sample_list: list[track] | None = await self.get_whosampled_sample_list(ws_page_url, session=session)
-            sample_data_structure[(track_name, artist)] = sample_list
             if self.logger:
-                self.logger.info(f"got a sample list for {track_name} by {artist}")
-            if sample_list == None:
+                self.logger.info(f"got a sample list for {track_name} by {artist}: {sample_list}")
+            if sample_list == None or sample_list == []:
                 continue
+            ds_key: str = f'{track_name} - {artist}'
+            sample_data_structure.append({
+                "name": ds_key,
+                "song_samples_report": []
+            })
+            
             for s in sample_list:
                 uri = await self.get_track_spotify_uri(song_name=s[0], artist_name=s[1], session=session, token=token)
                 if uri is not None:
                     new_song_uris.append(uri)
+                
+                sample_data_structure[-1]["song_samples_report"].append({
+                    "track_name": s[0],
+                    "artist": s[1],
+                    "uri": uri
+                })
         if self.logger:
             self.logger.info("Got all samples")
         if len(new_song_uris) == 0:
             print("no new uris!")
-            return None
-        print(sample_data_structure)
+            return None, sample_data_structure, resource_name, new_playlist_name
         if not user_id:
             headers = {
                 "Authorization": 'Bearer ' + token,
             }
             self.logger.info("Getting current user's user id")
-            print("does this print twice")
             for i in range(self.MAX_RETRIES):
                 async with session.get('https://api.spotify.com/v1/me', headers=headers) as res:
                     if self.logger and res.status != 200:
@@ -363,13 +375,12 @@ class Skeleton:
                     if i == self.MAX_RETRIES - 1:
                         if self.logger:
                             self.logger.error("Couldn't get user id of currently signed-in user")
-                        return None
+                        return None, sample_data_structure, resource_name, new_playlist_name
                     data = await res.json()
                     user_id = data["id"]
                     break
-        playlist_id, playlist_url = await self.create_playlist_for_user(original_resource_name=resource_name,
+        playlist_id, playlist_url = await self.create_playlist_for_user(new_playlist_name=new_playlist_name,
                                                                 user_id=user_id, 
-                                                                playlist_name=playlist_name, 
                                                                 playlist_description=playlist_description,
                                                                 token=token, session=session)
         headers = {
@@ -379,7 +390,6 @@ class Skeleton:
             "uris": new_song_uris
         }
         put_url = f'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
-        print(token)
         if self.logger:
             self.logger.info(f"adding tracks {body} to playlist {playlist_id}")
         for i in range(self.MAX_RETRIES):
@@ -390,6 +400,6 @@ class Skeleton:
                     if i == self.MAX_RETRIES - 1:
                         if self.logger:
                             self.logger.error(f"Couldn't add songs to playlist {playlist_id}")
-                        return None
+                        return FAILURE_RESPONSE
                     continue
-        return playlist_url
+        return playlist_url, sample_data_structure, resource_name, new_playlist_name
