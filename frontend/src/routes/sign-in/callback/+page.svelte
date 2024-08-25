@@ -13,6 +13,7 @@
         try {
             if (code) {
                 fetchingToken = true
+                console.log('sending a request to', `${PUBLIC_SERVER_URL}/token-from-code?code=${code}`)
                 const res = await fetch(
                     `${PUBLIC_SERVER_URL}/token-from-code?code=${code}`,
                     {
