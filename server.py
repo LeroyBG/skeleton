@@ -13,6 +13,9 @@ authorization = 'Basic ' + base64.b64encode(credentials.encode()).decode()
 routes = web.RouteTableDef()
 skeleton = Skeleton.Skeleton(verbose=True)
 
+@routes.get('/')
+async def hello_world(request: web.Request):
+    return web.Response(body="Hello world!")
 
 @routes.get('/token-from-code')
 async def token_from_code(request: web.Request):
