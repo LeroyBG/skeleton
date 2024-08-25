@@ -121,9 +121,10 @@ class Skeleton:
             async with session.get(get_url, headers=self.scraping_headers) as res:
                 # No retries, for now
                 if res.status != 200:
-                    self.logger.warning(f"Request {i + 1} failed")
+                    self.logger.warning(f"Request {i + 1} failed: {res}, {res.json()}")
                     if i == self.MAX_RETRIES - 1:
                         self.logger.error(f"Couldn't get whosampled page url for track {track_name} by {artist_name}")
+                        return None
                     continue
                 soup = BeautifulSoup(await res.text(), 'html.parser')
                 break
