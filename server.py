@@ -7,7 +7,9 @@ from aiohttp_session.cookie_storage import EncryptedCookieStorage
 from cryptography import fernet
 from datetime import datetime, timezone
 import urllib.parse
+from dotenv import load_dotenv
 
+load_dotenv()
 credentials = f"{environ['CLIENT_ID']}:{environ['CLIENT_SECRET']}"
 authorization = 'Basic ' + base64.b64encode(credentials.encode()).decode()
 routes = web.RouteTableDef()
