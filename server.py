@@ -33,7 +33,7 @@ async def token_from_code(request: web.Request):
     }
     req_url = "https://accounts.spotify.com/api/token"
     async with ClientSession() as session:
-        async with session.post(req_url, headers=headers, data=data) as res:
+        async with session.post(req_url, headers=headers, data=data, ssl=False) as res:
             # if res.status != 200:
             #     print(res)
             #     return web.Response(status=500)
