@@ -1,4 +1,4 @@
-from aiohttp import web, ClientSession
+from aiohttp import web, ClientSession, TCPConnector
 from os import environ
 import base64
 import Skeleton
@@ -8,8 +8,11 @@ from cryptography import fernet
 from datetime import datetime, timezone
 import urllib.parse
 from dotenv import load_dotenv
+import ssl
+import certifi
 
 load_dotenv()
+ssl_context = ssl.create_default_context(cafile=certifi.where())
 credentials = f"{environ['CLIENT_ID']}:{environ['CLIENT_SECRET']}"
 authorization = 'Basic ' + base64.b64encode(credentials.encode()).decode()
 routes = web.RouteTableDef()
@@ -32,8 +35,8 @@ async def token_from_code(request: web.Request):
         "grant_type": "authorization_code"
     }
     req_url = "https://accounts.spotify.com/api/token"
-    async with ClientSession() as session:
-        async with session.post(req_url, headers=headers, data=data, ssl=False) as res:
+    async with ClientSession(connector=TCPConnector(ssl=ssl_context)) as session:
+        async with session.post(req_url, headers=headers, data=data) as res:
             # if res.status != 200:
             #     print(res)
             #     return web.Response(status=500)
@@ -60,7 +63,7 @@ async def token_from_code(request: web.Request):
 @routes.get('/samples')
 async def samples(request: web.Request):
     print("Received a request for samples")
-    async with ClientSession() as session:
+    async with ClientSession(connector=TCPConnector(ssl=ssl_context)) as session:
         resource_uri = request.query["resource_uri"]
         request_session = await get_session(request)
         token_data = request_session.get("token")
