@@ -58,21 +58,21 @@
             "title": "To Pimp A Butterfly",
             "coverImageUrl": "https://i.scdn.co/image/ab67616d00001e02cdb645498cd3d8a2db4d05e1",
             "processingDuration": PLACEHOLDER_DELAY,
-            "uri": "https://open.spotify.com/album/7ycBtnsMtyVbbwTfJwRjSP",
+            "uri": "open.spotify.com/album/7ycBtnsMtyVbbwTfJwRjSP",
         },
         {
             "artist": "De La Soul",
             "title": "3 Feet High and Rising",
             "coverImageUrl": "https://i.scdn.co/image/ab67616d00001e02fa8d314f6f91e81889335dfc",
             "processingDuration": PLACEHOLDER_DELAY,
-            "uri": "https://open.spotify.com/album/34LxHI9x14qXUOS8AWRrYD",
+            "uri": "open.spotify.com/album/34LxHI9x14qXUOS8AWRrYD",
         },
         {
             "artist": "Beastie Boys",
             "title": "Paul's Boutique",
             "coverImageUrl": "https://i.scdn.co/image/ab67616d00001e022288f4cd4bf3a8764624a0d2",
             "processingDuration": PLACEHOLDER_DELAY,
-            "uri": "https://open.spotify.com/album/1kmyirVya5fRxdjsPFDM05",
+            "uri": "open.spotify.com/album/1kmyirVya5fRxdjsPFDM05",
         }
     ]
     
