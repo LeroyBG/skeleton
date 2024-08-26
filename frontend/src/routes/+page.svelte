@@ -5,9 +5,6 @@
     import { select, selection } from "$lib/stores/albumSliderSelection"
 
 
-
-
-
     const URIorURLPattern = /\/(?<resourceType>(track)|(album)|(playlist))(:|\/)(?<id>\w+)?/ig
 
     let resourceTypeChoices: string[] = ["playlist", "album", "track"]
@@ -52,6 +49,9 @@
     let activeResponseAnimation: boolean = false // Whether we got a response from Skeleton server
     let loadingText = ''
 
+    let newSpotifyPlaylistLinkAnimationText: string = ''
+    let newSpotifyPlaylistLink: string | null = null
+
     type samplesReport = {
         name: string;
         song_samples_report: {
@@ -94,6 +94,8 @@
         activeResponseAnimation = false
         emptySamplesReportAnimationText = null
         emptySamplesReport = false
+        newSpotifyPlaylistLink = null
+        newSpotifyPlaylistLinkAnimationText = ''
 
         // Async function that should execute until gotResponse != false 
         // WILL MUTATE resourceURIInput!!!!(!!!!) use originalPlaylistURIInput!
@@ -268,6 +270,7 @@
         samplesReport: samplesReport, 
         newPlaylistName: string
     ) => {
+        newSpotifyPlaylistLink = playlistURI
         console.log("Animation time!")
         console.log("samplesReport", samplesReport)
         console.log("newPlaylistName", newPlaylistName)
@@ -334,7 +337,12 @@
             }
             og_song_index++
         }
-
+        newSpotifyPlaylistLinkAnimationText = ''
+        let finalLinkAnimationText = 'spotify playlist link'
+        while (newSpotifyPlaylistLinkAnimationText.length < finalLinkAnimationText.length){
+            newSpotifyPlaylistLinkAnimationText += finalLinkAnimationText[newSpotifyPlaylistLinkAnimationText.length]
+            await shortTypingDelay()
+        }
     }
 
     $: if (!extractingLink) {
@@ -350,7 +358,7 @@
 </script>
 
 
-<div id="skeleton-container" class="w-3/4 text-puissantPurple-100">
+<div id="skeleton-container" class="w-3/4 text-puissantPurple-100 mb-10">
     <h3
         style="caret-shape: underscore;"
         class="text-4xl text-center font-medium text-theme-darkLight w-full caret-lagoBlue-400">
@@ -402,7 +410,7 @@
         </div>
     {/if}            
     {#if activeResponseAnimation}
-        <div id="samples-report-container" class="text-left mt-5 mb-10">
+        <div id="samples-report-container" class="text-left mt-5">
             <h3 class="text-3xl text-heartwarming-300 text-center">
                 {newPlaylistNameAnimationText}
             </h3>
@@ -426,7 +434,11 @@
                         {/each}
                     </ul>
                 {/each}
+                <div class="h-10 text-irishJig-200 flex flex-row justify-center items-center">
+                    <a href={newSpotifyPlaylistLink}>{newSpotifyPlaylistLinkAnimationText}</a>
+                </div>
             {:else}
+            
                 <code>
                     <p class="text-center my-10 text-purple-400"
                     >
