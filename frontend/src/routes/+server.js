@@ -17,26 +17,26 @@ import PaulsBoutiqueBeastieBoys from '$lib/hard-coded_sample_reports/Pauls_Bouti
 export function GET({ url }) {
     console.log('got a request', url.searchParams.get('uri'))
     switch(url.searchParams.get('uri')) {
-        case 'open.spotify.com/album/2noRn2Aes5aoNVsU6iWThc?si=3ce15b3c26c34cdf':
+        case 'open.spotify.com/album/2noRn2Aes5aoNVsU6iWThc':
             return new Response(JSON.stringify(DiscoveryDaftPunk))
-        case 'open.spotify.com/album/3DGQ1iZ9XKUQxAUWjfC34w?si=60e82aac04ed4fad':
+        case 'open.spotify.com/album/3DGQ1iZ9XKUQxAUWjfC34w':
             return new Response(JSON.stringify(goodkidmAAdcityKendrickLamar))
-        case 'open.spotify.com/album/43uErencdmuTRFZPG3zXL1?si=76d825fec189404f':
+        case 'open.spotify.com/album/43uErencdmuTRFZPG3zXL1':
             return new Response(JSON.stringify(PinataFreddieGibbs))
-        case 'open.spotify.com/album/19bQiwEKhXUBJWY6oV3KZk?si=033c39316b9b4d6a':
+        case 'open.spotify.com/album/19bQiwEKhXUBJWY6oV3KZk':
             console.log('let me give you Madvillany')
             return new Response(JSON.stringify(MadvillanyMFDoom))
-        case 'open.spotify.com/album/3u20OXh03DjCUzbf8XcGTq?si=1987e60a4ff841bc':
+        case 'open.spotify.com/album/3u20OXh03DjCUzbf8XcGTq':
             return new Response(JSON.stringify(SCARINGTHEHOES_JPEGMAFIA))
-        case 'open.spotify.com/album/1ezs1QD5SYQ6LtxpC9y5I2?si=8e434137c2bf460d':
+        case 'open.spotify.com/album/1ezs1QD5SYQ6LtxpC9y5I2':
             return new Response(JSON.stringify(ILAYDOWNMYLIFEFORYOU_JPEGMAFIA))
-        case 'open.spotify.com/album/5fMlysqhFE0itGn4KezMBW?si=gttrki1HTsuYIi_5xT1Vqg':
+        case 'open.spotify.com/album/5fMlysqhFE0itGn4KezMBW':
             return new Response(JSON.stringify(DonutsJDilla))
-        case 'https://open.spotify.com/album/7ycBtnsMtyVbbwTfJwRjSP?si=4iSSh4w8Q5u0VMFfTtjxxg':
+        case 'https://open.spotify.com/album/7ycBtnsMtyVbbwTfJwRjSP':
             return new Response(JSON.stringify(ToPimpAButterflyKendrickLamar))
-        case 'https://open.spotify.com/album/34LxHI9x14qXUOS8AWRrYD?si=6rbta2dzQs2h-WC13qLoLw':
+        case 'https://open.spotify.com/album/34LxHI9x14qXUOS8AWRrYD':
             return new Response(JSON.stringify(ThreeFeetHighAndRisingDeLaSoul))
-        case 'https://open.spotify.com/album/1kmyirVya5fRxdjsPFDM05?si=5JXw7MD2QuK06lAStmrrjQ':
+        case 'https://open.spotify.com/album/1kmyirVya5fRxdjsPFDM05':
             return new Response(JSON.stringify(PaulsBoutiqueBeastieBoys))
     }
 }

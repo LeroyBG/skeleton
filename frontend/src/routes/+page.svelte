@@ -1,6 +1,5 @@
 <script lang="ts">
 
-    import { PUBLIC_SERVER_URL } from "$env/static/public";
 	import ImageSlider from "$lib/ImageSlider.svelte";
     import { onMount } from "svelte";
     import { select, selection } from "$lib/stores/albumSliderSelection"
@@ -108,9 +107,15 @@
         const get_url = `/?uri=${originalResourceURIInput}`
         console.log("sending a request to", get_url)
         try {
+            const before = Date.now()
             const res = await fetch(get_url, {
                 credentials: 'include'
             })
+            const diff = Date.now() - before
+            const delayAmount = 5000 + Math.random() * 3000
+            if (diff < delayAmount) {
+                await delay(delayAmount - diff)
+            }
             if (!res.ok) {
                 throw new Error(res.statusText)
             }
@@ -349,9 +354,8 @@
     <h3
         style="caret-shape: underscore;"
         class="text-4xl text-center font-medium text-theme-darkLight w-full caret-lagoBlue-400">
-        enter spotify 
-        <code class="text-heartwarming-300">{resourceTypeChoices[resourceTypeIndexChoice]}</code> 
-        link
+        select an 
+        <code class="text-heartwarming-300">album</code>...
     </h3>
     <ImageSlider />
     {#if resourceURIInputVisible} <!-- just display an input thing -->
@@ -387,14 +391,14 @@
             </div>   
             {#if !activeResponseAnimation}
                 <code>
-                    <p class="my-10 text-irishJig-300 block text-2xl mb-10 text-center"
+                    <p class="my-10 text-irishJig-300 block text-2xl text-center h-3"
                     >{loadingText}</p>
                 </code>
             {/if}
         </div>
     {/if}            
     {#if activeResponseAnimation}
-        <div id="samples-report-container" class="text-left mt-5">
+        <div id="samples-report-container" class="text-left mt-5 mb-10">
             <h3 class="text-3xl text-heartwarming-300 text-center">
                 {newPlaylistNameAnimationText}
             </h3>
