@@ -359,8 +359,8 @@
     </h3>
     <ImageSlider />
     {#if resourceURIInputVisible} <!-- just display an input thing -->
-        <form class="flex flex-col items-center">
-            <input type="text" class="my-10 h-20 font-light bg-transparent border-none w-full text-4xl text-irishJig-300 font-mono
+        <form class="flex flex-col items-center w-full">
+            <input type="text" class="my-10 h-20 font-light bg-transparent border-none w-full text-xs lg:text-4xl text-irishJig-300 font-mono
                 focus:outline-none disabled:opacity-100"
                 bind:value={$selection}
                 disabled
