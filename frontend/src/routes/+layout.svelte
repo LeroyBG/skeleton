@@ -5,7 +5,8 @@
 
 <header class="h-14 flex justify-center items-center text-puissantPurple-100 text-base">
     <p>to use this app with any album, song, or playlist, <a class="text-irishJig-300 underline"
-        href={PUBLIC_PROJECT_GITHUB_LINK}>run it locally</a> :)</p>
+        href={PUBLIC_PROJECT_GITHUB_LINK}
+        target="_blank">run it locally</a> :)</p>
 </header>
 <div class="flex flex-col items-center gap-32">
     <div id="top-title-container" class="flex w-full justify-center items-center text-7xl mt-5 text-irishJig-300">
