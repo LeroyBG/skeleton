@@ -49,7 +49,7 @@
     let activeResponseAnimation: boolean = false // Whether we got a response from Skeleton server
     let loadingText = ''
 
-    let newSpotifyPlaylistLinkAnimationText: string = ''
+    let newSpotifyPlaylistLinkText: string = ''
     let newSpotifyPlaylistLink: string | null = null
 
     type samplesReport = {
@@ -95,7 +95,7 @@
         emptySamplesReportAnimationText = null
         emptySamplesReport = false
         newSpotifyPlaylistLink = null
-        newSpotifyPlaylistLinkAnimationText = ''
+        newSpotifyPlaylistLinkText = ''
 
         // Async function that should execute until gotResponse != false 
         // WILL MUTATE resourceURIInput!!!!(!!!!) use originalPlaylistURIInput!
@@ -337,12 +337,7 @@
             }
             og_song_index++
         }
-        newSpotifyPlaylistLinkAnimationText = ''
-        let finalLinkAnimationText = 'spotify playlist link'
-        while (newSpotifyPlaylistLinkAnimationText.length < finalLinkAnimationText.length){
-            newSpotifyPlaylistLinkAnimationText += finalLinkAnimationText[newSpotifyPlaylistLinkAnimationText.length]
-            await shortTypingDelay()
-        }
+        newSpotifyPlaylistLinkText = 'spotify playlist link'
     }
 
     $: if (!extractingLink) {
@@ -434,8 +429,8 @@
                         {/each}
                     </ul>
                 {/each}
-                <div class="h-10 text-irishJig-200 flex flex-row justify-center items-center">
-                    <a href={newSpotifyPlaylistLink}>{newSpotifyPlaylistLinkAnimationText}</a>
+                <div class="h-10 text-irishJig-200 flex flex-row justify-center items-center underline">
+                    <a href={newSpotifyPlaylistLink}>{newSpotifyPlaylistLinkText}</a>
                 </div>
             {:else}
             
