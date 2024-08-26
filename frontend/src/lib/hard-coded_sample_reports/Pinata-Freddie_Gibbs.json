@@ -1,0 +1,352 @@
+{
+    "original_resource_name": "Piñata",
+    "playlist_name": "Piñata, deconstructed",
+    "playlist_uri": "spotify:playlist:1C20hU7fsRUFN7s6DK6otr",
+    "samples_report": [
+        {
+            "name": "Supplier - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Get Up",
+                    "artist": "The Gaturs",
+                    "uri": "spotify:track:0KJgKTYGmGsEegNSq9lkkx"
+                },
+                {
+                    "track_name": "Supplying Dope",
+                    "artist": "Mean Johnny Barrows (movie)",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Scarface - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "I'm Gonna Make Love Last This Time",
+                    "artist": "The Inclinations",
+                    "uri": null
+                },
+                {
+                    "track_name": "The Shoot Out",
+                    "artist": "Killarmy",
+                    "uri": "spotify:track:0C8FswOgvSePV8xH80W0nG"
+                },
+                {
+                    "track_name": "Gang Busters Theme",
+                    "artist": "Gang Busters",
+                    "uri": null
+                },
+                {
+                    "track_name": "Brooklynville",
+                    "artist": "OPA",
+                    "uri": "spotify:track:2WjyP6qmf0m4XvxPlaXMsU"
+                },
+                {
+                    "track_name": "Scarface",
+                    "artist": "Ghetto Boys",
+                    "uri": null
+                },
+                {
+                    "track_name": "The Flat Land",
+                    "artist": "Rudy Ray Moore",
+                    "uri": null
+                },
+                {
+                    "track_name": "The Safe Cracking Combine",
+                    "artist": "Gang Busters",
+                    "uri": null
+                },
+                {
+                    "track_name": "It's All Real",
+                    "artist": "Pitch Black",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Deeper - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Keep It Real",
+                    "artist": "Miilkbone",
+                    "uri": "spotify:track:2pFqCPGkedpl5ThtyNvmEG"
+                },
+                {
+                    "track_name": "Love/Hate (Instrumental)",
+                    "artist": "Madlib",
+                    "uri": "spotify:track:2Cq07ZYUAwjxiMqTW78dhc"
+                },
+                {
+                    "track_name": "I'm Gonna Make Love Last This Time",
+                    "artist": "The Inclinations",
+                    "uri": null
+                },
+                {
+                    "track_name": "Live @ Hip Hop Kemp 2012/08/17",
+                    "artist": "Freddie Gibbs",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "High - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "I Get High",
+                    "artist": "Pure Magic",
+                    "uri": null
+                },
+                {
+                    "track_name": "Sky's the Limit",
+                    "artist": "The Notorious B.I.G.",
+                    "uri": "spotify:track:0xdYzkbBBfTevSyOJqWUSX"
+                },
+                {
+                    "track_name": "You Made My Life Beautiful",
+                    "artist": "Pure Magic",
+                    "uri": null
+                },
+                {
+                    "track_name": "Jive My Baby (Album Version)",
+                    "artist": "Malcolm McLaren",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Bomb - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Goblin",
+                    "artist": "Goblin",
+                    "uri": "spotify:track:6x2XEXR6C7abyTZOGInSMb"
+                },
+                {
+                    "track_name": "Interlude (Working on You)",
+                    "artist": "Lamont Dozier",
+                    "uri": "spotify:track:0AzigvmIpvGz2vN28FXtlK"
+                }
+            ]
+        },
+        {
+            "name": "Shitsville - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "I'm Not in Love",
+                    "artist": "10cc",
+                    "uri": "spotify:track:5HQEmiV2lKnSO6qa2fsR7x"
+                },
+                {
+                    "track_name": "Up Market",
+                    "artist": "Andy Quin",
+                    "uri": "spotify:track:2UMURaDH5QNJpq2sHys4dz"
+                },
+                {
+                    "track_name": "A Blow for Me, a Toot to You",
+                    "artist": "Fred Wesley",
+                    "uri": "spotify:track:7xqUrcModMRC4M6wpvYLRh"
+                },
+                {
+                    "track_name": "Pimpin' Sam",
+                    "artist": "Bruce Jackson",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Real - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Leaves",
+                    "artist": "Food",
+                    "uri": "spotify:track:1tAQCfywFYSxQKnRNu9iUW"
+                },
+                {
+                    "track_name": "Pot Au Feu",
+                    "artist": "Delia Derbyshire",
+                    "uri": "spotify:track:6Y29BVuOV3mk21WLPFELU7"
+                },
+                {
+                    "track_name": "Blue Veils and Golden Sand",
+                    "artist": "Delia Derbyshire",
+                    "uri": null
+                },
+                {
+                    "track_name": "S.D. Plissken",
+                    "artist": "Escape From New York (movie)",
+                    "uri": null
+                },
+                {
+                    "track_name": "The Bad Guy",
+                    "artist": "Scarface (movie)",
+                    "uri": null
+                },
+                {
+                    "track_name": "Takeover",
+                    "artist": "Jay-Z",
+                    "uri": "spotify:track:135lkyQRwFlWfmHjJTxtld"
+                },
+                {
+                    "track_name": "Just a Warning, Sucka!",
+                    "artist": "J.D.'s Revenge (movie)",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Uno - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Shibolet",
+                    "artist": "Synergy",
+                    "uri": "spotify:track:7hfX06yrOtfqcvZZVSJ2g3"
+                },
+                {
+                    "track_name": "Against All Odds",
+                    "artist": "Makaveli",
+                    "uri": "spotify:track:29YwR5PSDnjzBU9mkmlZag"
+                }
+            ]
+        },
+        {
+            "name": "Robes - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Sweet Dreamer",
+                    "artist": "Lenny White",
+                    "uri": "spotify:track:0WURf5opIKLIEUcqH1ceka"
+                },
+                {
+                    "track_name": "Lady Ostrich",
+                    "artist": "Pookah",
+                    "uri": null
+                },
+                {
+                    "track_name": "Two Occasions",
+                    "artist": "The Deele",
+                    "uri": "spotify:track:0mt80ksFAwPHXyAlArU5Yc"
+                },
+                {
+                    "track_name": "Waterfalls",
+                    "artist": "TLC",
+                    "uri": "spotify:track:6qspW4YKycviDFjHBOaqUY"
+                }
+            ]
+        },
+        {
+            "name": "Broken - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Wherever You Are",
+                    "artist": "Isaac Hayes",
+                    "uri": "spotify:track:3o7eaiegv9wDwJqyhEIGYX"
+                }
+            ]
+        },
+        {
+            "name": "Lakers - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Waiting",
+                    "artist": "Deniece Williams",
+                    "uri": "spotify:track:5APKbHn1ePaqcK9yuNkHnE"
+                },
+                {
+                    "track_name": "Mercy Mercy Mercy",
+                    "artist": "The Cannonball Adderley Quintet",
+                    "uri": null
+                },
+                {
+                    "track_name": "Headquarters",
+                    "artist": "Dillinger",
+                    "uri": "spotify:track:2qUhew5dKw8kO0TLSpVydE"
+                },
+                {
+                    "track_name": "Going Back to Cali",
+                    "artist": "The Notorious B.I.G.",
+                    "uri": "spotify:track:53duuSwaLOZuIrELvZXqLH"
+                }
+            ]
+        },
+        {
+            "name": "Knicks - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "I Care for You",
+                    "artist": "The Ovations",
+                    "uri": "spotify:track:1YFzn0l6mfVaAiafvLEkBW"
+                }
+            ]
+        },
+        {
+            "name": "Shame - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Wish That You Were Mine",
+                    "artist": "The Manhattans",
+                    "uri": "spotify:track:19mXqYcLHY716cN53T1d1E"
+                }
+            ]
+        },
+        {
+            "name": "Watts - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "A Little Song for You",
+                    "artist": "Bobby Militello",
+                    "uri": null
+                },
+                {
+                    "track_name": "Charnel House",
+                    "artist": "Ogden Edsl",
+                    "uri": "spotify:track:6hnTh6O3tzDIYdyIZ5kdx3"
+                },
+                {
+                    "track_name": "Heat",
+                    "artist": "50 Cent",
+                    "uri": "spotify:track:4qRdQm8EzQlkx7WmTKpI4R"
+                },
+                {
+                    "track_name": "Double Dutch (Extended)",
+                    "artist": "Malcolm McLaren",
+                    "uri": null
+                },
+                {
+                    "track_name": "Back Down",
+                    "artist": "50 Cent",
+                    "uri": "spotify:track:3EjmNhVqZ4FjK8ZyVKWKM6"
+                }
+            ]
+        },
+        {
+            "name": "Piñata - Freddie Gibbs",
+            "song_samples_report": [
+                {
+                    "track_name": "Hang Your Head in Shame",
+                    "artist": "New York City",
+                    "uri": "spotify:track:7vuoEf6x2YQ6dtcMnDOn8F"
+                },
+                {
+                    "track_name": "Come & Talk to Me",
+                    "artist": "Jodeci",
+                    "uri": null
+                },
+                {
+                    "track_name": "Outstanding",
+                    "artist": "The Gap Band",
+                    "uri": "spotify:track:2yd0XI7g0BhAgY9GkpPClU"
+                },
+                {
+                    "track_name": "Man Lets Out a Gut-Wrenching Scream and Falls Into Distance Take 1",
+                    "artist": "The Hollywood Edge Sound Effects Library",
+                    "uri": "spotify:track:7j5tLsLDkAlhAc2NvpC9uu"
+                },
+                {
+                    "track_name": "Homie Don't Play That",
+                    "artist": "Geto Boys",
+                    "uri": "spotify:track:7aoH3WHwZjThkDKNeuCxve"
+                }
+            ]
+        }
+    ]
+}

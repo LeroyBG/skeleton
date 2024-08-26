@@ -1,0 +1,602 @@
+{
+    "original_resource_name": "Donuts",
+    "playlist_name": "the anatomy of... Donuts",
+    "playlist_uri": "spotify:playlist:6i0judVvyPyA1ROIr595Nu",
+    "samples_report": [
+        {
+            "name": "Donuts (Outro) - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Stay With Me",
+                    "artist": "Gary Davis",
+                    "uri": null
+                },
+                {
+                    "track_name": "Six Figures",
+                    "artist": "Skillz",
+                    "uri": "spotify:track:4zsfIYcEWACKGlM6hHEX0l"
+                }
+            ]
+        },
+        {
+            "name": "Workinonit - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "The Worst Band in the World",
+                    "artist": "10cc",
+                    "uri": "spotify:track:2gUIRwX5C4HlX4UzdHGORe"
+                },
+                {
+                    "track_name": "Sprite: Melonball Bounce",
+                    "artist": "Raymond Scott",
+                    "uri": "spotify:track:5I2NqWR6h8qmhyBhCABF0C"
+                },
+                {
+                    "track_name": "Buffalo Gals",
+                    "artist": "Malcolm McLaren",
+                    "uri": "spotify:track:4gCo2r1gCEw70OAq9cF1uW"
+                },
+                {
+                    "track_name": "Yes It's You",
+                    "artist": "\"Sweet\" Charles Sherrell",
+                    "uri": null
+                },
+                {
+                    "track_name": "King of the Beats",
+                    "artist": "Mantronix",
+                    "uri": "spotify:track:3Miruku2Myz4Rb40y1XpI7"
+                },
+                {
+                    "track_name": "Pee-Wee's Dance",
+                    "artist": "Joeski Love",
+                    "uri": null
+                },
+                {
+                    "track_name": "The New Style",
+                    "artist": "Beastie Boys",
+                    "uri": "spotify:track:0Mu1MYdE414HeybYSms5KK"
+                },
+                {
+                    "track_name": "Testing 1-2",
+                    "artist": "Model 500",
+                    "uri": "spotify:track:3oaCv7QL8PYBWF6LBcEEu3"
+                },
+                {
+                    "track_name": "Six Figures",
+                    "artist": "Skillz",
+                    "uri": "spotify:track:4zsfIYcEWACKGlM6hHEX0l"
+                }
+            ]
+        },
+        {
+            "name": "Waves - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Johnny, Don't Do It",
+                    "artist": "10cc",
+                    "uri": null
+                },
+                {
+                    "track_name": "King of the Beats",
+                    "artist": "Mantronix",
+                    "uri": "spotify:track:3Miruku2Myz4Rb40y1XpI7"
+                },
+                {
+                    "track_name": "Intro",
+                    "artist": "B.R. Gunna",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "The New - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Whatcha Gonna Wear Tomorrow",
+                    "artist": "Detroit Emeralds",
+                    "uri": "spotify:track:0sm8Rp0LXjzcdeONiXpqkw"
+                },
+                {
+                    "track_name": "The New Style",
+                    "artist": "Beastie Boys",
+                    "uri": "spotify:track:0Mu1MYdE414HeybYSms5KK"
+                }
+            ]
+        },
+        {
+            "name": "Stop - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "You're Gonna Need Me",
+                    "artist": "Dionne Warwick",
+                    "uri": "spotify:track:5ezYm2LkW25YhkkTp7bC9u"
+                },
+                {
+                    "track_name": "Why",
+                    "artist": "Jadakiss",
+                    "uri": "spotify:track:58LflM1owDAzQkYIL7ayCX"
+                },
+                {
+                    "track_name": "Six Figures",
+                    "artist": "Skillz",
+                    "uri": "spotify:track:4zsfIYcEWACKGlM6hHEX0l"
+                }
+            ]
+        },
+        {
+            "name": "People - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "My People...Hold On",
+                    "artist": "Eddie Kendricks",
+                    "uri": "spotify:track:5zKAlrdrdEkBkylhwT3cqH"
+                },
+                {
+                    "track_name": "Mujhe Maar Daalo",
+                    "artist": "Asha Bhosle",
+                    "uri": "spotify:track:4tarOxu3XDRnP8REQrtoRb"
+                },
+                {
+                    "track_name": "Here We Go (Live at the Funhouse)",
+                    "artist": "Run-DMC",
+                    "uri": null
+                },
+                {
+                    "track_name": "King of the Beats",
+                    "artist": "Mantronix",
+                    "uri": "spotify:track:3Miruku2Myz4Rb40y1XpI7"
+                }
+            ]
+        },
+        {
+            "name": "The Diff'rence - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Fruitman",
+                    "artist": "Kool & the Gang",
+                    "uri": "spotify:track:0ggwNBt76BK7sn67uZ5LzA"
+                },
+                {
+                    "track_name": "Jungle Boogie",
+                    "artist": "Kool & the Gang",
+                    "uri": "spotify:track:3K0SJUQNbOkUprTFcwwAKN"
+                },
+                {
+                    "track_name": "King of the Beats",
+                    "artist": "Mantronix",
+                    "uri": "spotify:track:3Miruku2Myz4Rb40y1XpI7"
+                },
+                {
+                    "track_name": "Six Figures",
+                    "artist": "Skillz",
+                    "uri": "spotify:track:4zsfIYcEWACKGlM6hHEX0l"
+                }
+            ]
+        },
+        {
+            "name": "Mash - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Golden Apples - Part II",
+                    "artist": "Galt MacDermot",
+                    "uri": null
+                },
+                {
+                    "track_name": "Dance Contest",
+                    "artist": "Frank Zappa",
+                    "uri": "spotify:track:7qg9IHaAjDmEovazbba46H"
+                },
+                {
+                    "track_name": "Season of the Witch",
+                    "artist": "Lou Rawls",
+                    "uri": "spotify:track:65CQSLIsCjbVyGXVRg97K4"
+                }
+            ]
+        },
+        {
+            "name": "Time: The Donut of the Heart - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "All I Do Is Think of You",
+                    "artist": "The Jackson 5",
+                    "uri": "spotify:track:5GoheMjTcV8xbbUUWchvjl"
+                },
+                {
+                    "track_name": "Yes It's You",
+                    "artist": "\"Sweet\" Charles Sherrell",
+                    "uri": null
+                },
+                {
+                    "track_name": "Strangers in the Night",
+                    "artist": "\"Sweet\" Charles Sherrell",
+                    "uri": null
+                },
+                {
+                    "track_name": "Dedicated to the One I Love",
+                    "artist": "\"Sweet\" Charles Sherrell",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Glazed - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "You Just Can't Win (By Making the Same Mistake)",
+                    "artist": "Gene Chandler",
+                    "uri": null
+                },
+                {
+                    "track_name": "Season of the Witch",
+                    "artist": "Lou Rawls",
+                    "uri": "spotify:track:65CQSLIsCjbVyGXVRg97K4"
+                },
+                {
+                    "track_name": "Dreams",
+                    "artist": "Ramsey Lewis",
+                    "uri": "spotify:track:1TzF9zFN2vP0v4cCXe48b2"
+                },
+                {
+                    "track_name": "Ball of Confusion (That's What the World Is Today)",
+                    "artist": "Edwin Starr",
+                    "uri": "spotify:track:39VxbglSLH5BHLdTZ39JcT"
+                }
+            ]
+        },
+        {
+            "name": "Airworks - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "I Don't Really Care",
+                    "artist": "L. V. Johnson",
+                    "uri": "spotify:track:56oYFu8mvIdRQjKSFVmlfV"
+                },
+                {
+                    "track_name": "Bendix the Tomorrow People",
+                    "artist": "Raymond Scott",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Lightworks - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Lightworks",
+                    "artist": "Raymond Scott",
+                    "uri": "spotify:track:5M1RPuboe0j437fjWMT1Y2"
+                },
+                {
+                    "track_name": "King of the Beats",
+                    "artist": "Mantronix",
+                    "uri": "spotify:track:3Miruku2Myz4Rb40y1XpI7"
+                },
+                {
+                    "track_name": "Bendix the Tomorrow People",
+                    "artist": "Raymond Scott",
+                    "uri": null
+                },
+                {
+                    "track_name": "Six Figures",
+                    "artist": "Skillz",
+                    "uri": "spotify:track:4zsfIYcEWACKGlM6hHEX0l"
+                },
+                {
+                    "track_name": "Cyclic Bit #1",
+                    "artist": "Raymond Scott",
+                    "uri": "spotify:track:4WRSaFlWqqcencXVXwYGTG"
+                }
+            ]
+        },
+        {
+            "name": "Stepson Of The Clapper - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Long Red",
+                    "artist": "Mountain",
+                    "uri": "spotify:track:6OXCZPDdCCKN759Y2Aa26Y"
+                }
+            ]
+        },
+        {
+            "name": "The Twister (Huh, What) - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "For Once in My Life (Live)",
+                    "artist": "Stevie Wonder",
+                    "uri": null
+                },
+                {
+                    "track_name": "Kick the Can (Part 1)",
+                    "artist": "Fred Frith",
+                    "uri": null
+                },
+                {
+                    "track_name": "Cloud Nine (Live)",
+                    "artist": "The Temptations",
+                    "uri": "spotify:track:0CO7J4Ai3NMHYGCHyoXkqt"
+                },
+                {
+                    "track_name": "Pee-Wee's Dance",
+                    "artist": "Joeski Love",
+                    "uri": null
+                },
+                {
+                    "track_name": "Buffalo Gals",
+                    "artist": "Malcolm McLaren",
+                    "uri": "spotify:track:4gCo2r1gCEw70OAq9cF1uW"
+                },
+                {
+                    "track_name": "His Name Is Mutty Ranks",
+                    "artist": "A Tribe Called Quest",
+                    "uri": "spotify:track:5aZFsy9YX9jqP7v7Hxhjam"
+                },
+                {
+                    "track_name": "Dust a Sound Boy",
+                    "artist": "Super Beagle",
+                    "uri": "spotify:track:3iGtu69TVhOuGVZY6PXcza"
+                },
+                {
+                    "track_name": "Funky Soul Makossa",
+                    "artist": "Nairobi",
+                    "uri": "spotify:track:5AdfdWns4hf8ZzK1tQL4DF"
+                },
+                {
+                    "track_name": "Wanted: Girl to Share Apartment",
+                    "artist": "Steve Allen",
+                    "uri": "spotify:track:5vm2Xrde8qvveekNwWVFL4"
+                }
+            ]
+        },
+        {
+            "name": "One Eleven - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "A Legend in Its Own Time",
+                    "artist": "Smokey Robinson",
+                    "uri": "spotify:track:7LyjOVrLQVCNk2CIZmAJJb"
+                },
+                {
+                    "track_name": "King Tim III (Personality Jock)",
+                    "artist": "The Fatback Band",
+                    "uri": "spotify:track:6nYsrPdgNbJIPzQLkasfm5"
+                },
+                {
+                    "track_name": "Here We Go (Live at the Funhouse)",
+                    "artist": "Run-DMC",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Two Can Win - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Only One Can Win",
+                    "artist": "The Sylvers",
+                    "uri": "spotify:track:4BLqx84IpussVxrUGOMLOX"
+                }
+            ]
+        },
+        {
+            "name": "Don't Cry - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "I Can't Stand (To See You Cry)",
+                    "artist": "The Escorts",
+                    "uri": null
+                },
+                {
+                    "track_name": "Comedy Routine: Hello Young Lovers / Cloud Nine / if I Didn't Care",
+                    "artist": "The Temptations",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Anti-American Graffiti - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Family Tree",
+                    "artist": "Tin Tin",
+                    "uri": null
+                },
+                {
+                    "track_name": "Pee-Wee's Dance",
+                    "artist": "Joeski Love",
+                    "uri": null
+                },
+                {
+                    "track_name": "Emergency Program Over-Ride",
+                    "artist": "David Ossman",
+                    "uri": "spotify:track:0oDMfJPsy7KSOutlDVtOfO"
+                }
+            ]
+        },
+        {
+            "name": "Geek Down - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "UFO",
+                    "artist": "ESG",
+                    "uri": null
+                },
+                {
+                    "track_name": "Charlie's Theme",
+                    "artist": "The Jimi Entley Sound",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Thunder - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Sweet Misery",
+                    "artist": "Martha Reeves",
+                    "uri": "spotify:track:2fiu7gHgMvJbwdAhXro5rb"
+                },
+                {
+                    "track_name": "For Once in My Life (Live)",
+                    "artist": "Stevie Wonder",
+                    "uri": null
+                },
+                {
+                    "track_name": "Sing a Simple Song (Live)",
+                    "artist": "The Originals",
+                    "uri": null
+                },
+                {
+                    "track_name": "Pulsar City Alarm",
+                    "artist": "Adams & Fleisner",
+                    "uri": null
+                },
+                {
+                    "track_name": "I Can't Turn You Loose (Live)",
+                    "artist": "Blinky",
+                    "uri": null
+                },
+                {
+                    "track_name": "Who's Making Love (Live)",
+                    "artist": "Bobby Taylor",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Gobstopper - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "To the Other Man",
+                    "artist": "Luther Ingram",
+                    "uri": "spotify:track:1I3xgRAsHGDMaRHsawyN45"
+                },
+                {
+                    "track_name": "King of the Beats",
+                    "artist": "Mantronix",
+                    "uri": "spotify:track:3Miruku2Myz4Rb40y1XpI7"
+                }
+            ]
+        },
+        {
+            "name": "One For Ghost - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "To the Other Man",
+                    "artist": "Luther Ingram",
+                    "uri": "spotify:track:1I3xgRAsHGDMaRHsawyN45"
+                },
+                {
+                    "track_name": "King of the Beats",
+                    "artist": "Mantronix",
+                    "uri": "spotify:track:3Miruku2Myz4Rb40y1XpI7"
+                }
+            ]
+        },
+        {
+            "name": "Dilla Says Go - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Rubber Band",
+                    "artist": "The Trammps",
+                    "uri": "spotify:track:30qGwfY1Vuc4Xbdswn3cjF"
+                },
+                {
+                    "track_name": "No Games",
+                    "artist": "Jaylib",
+                    "uri": "spotify:track:30Y7FE1M6Zx9SkVWwJhSJs"
+                },
+                {
+                    "track_name": "Do Ya Thing",
+                    "artist": "B.R. Gunna",
+                    "uri": null
+                },
+                {
+                    "track_name": "Intro",
+                    "artist": "B.R. Gunna",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Walkinonit - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Walk on By",
+                    "artist": "The Undisputed Truth",
+                    "uri": "spotify:track:1X9m2vctL8evJnZhCqEbUg"
+                },
+                {
+                    "track_name": "Six Figures",
+                    "artist": "Skillz",
+                    "uri": "spotify:track:4zsfIYcEWACKGlM6hHEX0l"
+                }
+            ]
+        },
+        {
+            "name": "The Factory - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Animosity",
+                    "artist": "Fred Weinberg",
+                    "uri": "spotify:track:39v0PIZDBGdEbcfbYE2TCj"
+                },
+                {
+                    "track_name": "Mean Old Devil",
+                    "artist": "Bruce Haack",
+                    "uri": "spotify:track:7wKt2GUDCCzK1dRFs2wfDC"
+                },
+                {
+                    "track_name": "King of the Beats",
+                    "artist": "Mantronix",
+                    "uri": "spotify:track:3Miruku2Myz4Rb40y1XpI7"
+                }
+            ]
+        },
+        {
+            "name": "U-Love - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Just Because I Really Love You",
+                    "artist": "Jerry Butler",
+                    "uri": "spotify:track:0rLKAokRZwKWSiu06eSZiy"
+                },
+                {
+                    "track_name": "Do Ya Thing",
+                    "artist": "B.R. Gunna",
+                    "uri": null
+                },
+                {
+                    "track_name": "Intro",
+                    "artist": "B.R. Gunna",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Bye. - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "Don't Say Goodnight (It's Time for Love) (Parts 1 & 2)",
+                    "artist": "The Isley Brothers",
+                    "uri": null
+                }
+            ]
+        },
+        {
+            "name": "Last Donut Of The Night - J Dilla",
+            "song_samples_report": [
+                {
+                    "track_name": "To You With Love",
+                    "artist": "The Moments",
+                    "uri": null
+                },
+                {
+                    "track_name": "Rainbow '65",
+                    "artist": "Gene Chandler",
+                    "uri": "spotify:track:0Ah3HuQ8uhBjJwshu7tZiQ"
+                }
+            ]
+        }
+    ]
+}

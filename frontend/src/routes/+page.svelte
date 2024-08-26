@@ -1,7 +1,9 @@
 <script lang="ts">
 
     import { PUBLIC_SERVER_URL } from "$env/static/public";
+	import ImageSlider from "$lib/ImageSlider.svelte";
     import { onMount } from "svelte";
+    import { select, selection } from "$lib/stores/albumSliderSelection"
 
 
 
@@ -23,13 +25,14 @@
         return () => resourceTypeIntervalId ? clearInterval(resourceTypeIntervalId) : null
     })
 
-    let resourceURIInput: string = ""
     let resourceURIInputDisabled = false
     let resourceURIInputVisible = true
     let GOButtonEnabled: boolean = false
     let inputResourceType: 'track' | 'album' | 'playlist' | null = null
     let inputId: string | null = null
     
+    let extractingLink: boolean = false
+    let originalURIInput: string | null = null
     let handlingSubmission: boolean = false
     let typeLiteralText: string = ''
     let typeText: string = ''
@@ -71,15 +74,6 @@
     let emptySamplesReport: boolean = false
     let emptySamplesReportAnimationText: string | null = null
 
-    const handleResourceURIInput = () => {
-        const match = URIorURLPattern.exec(resourceURIInput)
-        console.log("Input triggered!", resourceURIInput, URIorURLPattern, URIorURLPattern.exec(resourceURIInput))
-        GOButtonEnabled = !!match
-        //@ts-ignore -- regex ensures type will match, i think
-        inputResourceType = match?.groups?.resourceType || null
-        inputId = match?.groups?.id || null
-    }
-
     const loadingTextOptions = [
         "doing some crate digging",
         "talking to some music nerds",
@@ -91,16 +85,16 @@
 
 
     const handleGOButtonPRess = async () => {
+        console.log("Go button pressed")
         handlingSubmission = true
         resourceURIInputDisabled = true
         GOButtonEnabled = false
-        const originalResourceURIInput = resourceURIInput
+        const originalResourceURIInput = $selection
 
         // reset state if we're getting another one
         activeResponseAnimation = false
         emptySamplesReportAnimationText = null
         emptySamplesReport = false
-
 
         // Async function that should execute until gotResponse != false 
         // WILL MUTATE resourceURIInput!!!!(!!!!) use originalPlaylistURIInput!
@@ -111,8 +105,8 @@
         let samplesReport: samplesReport | null = null
         let originalResourceName: string | null = null
         let newPlaylistName: string | null = null
-
-        const get_url = `${PUBLIC_SERVER_URL}/samples?resource_uri=${originalResourceURIInput}`
+        const get_url = `/?uri=${originalResourceURIInput}`
+        console.log("sending a request to", get_url)
         try {
             const res = await fetch(get_url, {
                 credentials: 'include'
@@ -136,7 +130,7 @@
         await playSampleReportTextAnimations(playlistURI, samplesReport || [], newPlaylistName || originalResourceName!)
         handlingSubmission = false
         resourceURIInputDisabled = false
-        resourceURIInput = ""
+        select("")
         resourceURIInputVisible = true
 
         inputResourceType  = null
@@ -174,7 +168,7 @@
         song 2 name
         */
 
-
+        extractingLink = true
         // assume we have valid input in the resource input thingy
         // inputResourceType won't be null due to regex
         if (!inputResourceType || !inputId) {
@@ -185,8 +179,8 @@
         clearInterval(resourceTypeIntervalId!)
         resourceTypeIndexChoice = resourceTypeChoices.indexOf(inputResourceType)
 
-        while (resourceURIInput.length != 1) {
-            resourceURIInput = resourceURIInput.slice(0,  resourceURIInput.length - 1)
+        while ($selection.length != 1) {
+            select($selection.slice(0,  $selection.length - 1))
             await randDelay(20, .34)
         }
 
@@ -194,7 +188,7 @@
 
 
         await delay(30)
-        resourceURIInput = ' '
+        select(' ')
         await delay(20)
         let currEl: 'type literal' | 'type' | 'id literal' | 'id' | 'done' = 'type literal'
         while (currEl !== 'done') {
@@ -226,7 +220,7 @@
             }
             await delay(75)
         }
-
+        extractingLink = false
     }
 
     const playLoadingTextAnimations = async () => {
@@ -337,6 +331,16 @@
         }
 
     }
+
+    $: if (!extractingLink) {
+        const match = URIorURLPattern.exec($selection) // reactive value!
+        console.log("Input triggered!", $selection, URIorURLPattern, URIorURLPattern.exec($selection))
+        GOButtonEnabled = !!match
+        //@ts-ignore -- regex ensures type will match, i think
+        inputResourceType = match?.groups?.resourceType || null
+        inputId = match?.groups?.id || null
+    }
+
     console.log("Button enabled: ", GOButtonEnabled)
 </script>
 
@@ -349,13 +353,13 @@
         <code class="text-heartwarming-300">{resourceTypeChoices[resourceTypeIndexChoice]}</code> 
         link
     </h3>
+    <ImageSlider />
     {#if resourceURIInputVisible} <!-- just display an input thing -->
         <form class="flex flex-col items-center">
-            <input type="text" class="my-10 h-20 font-light bg-transparent border-none w-full text-6xl text-irishJig-300 font-mono
+            <input type="text" class="my-10 h-20 font-light bg-transparent border-none w-full text-4xl text-irishJig-300 font-mono
                 focus:outline-none"
-                bind:value={resourceURIInput}
-                on:input={handleResourceURIInput}
-                disabled={resourceURIInputDisabled}
+                bind:value={$selection}
+                disabled
                 placeholder="open.spotify.com/{resourceTypeChoices[resourceTypeIndexChoice]}/...">
             <button
                 disabled={!GOButtonEnabled}
