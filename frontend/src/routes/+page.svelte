@@ -200,8 +200,8 @@
             // console.log(typeLiteralText + typeText + idLiteralText + idText)
             switch(currEl){
                 case 'type literal':
-                    typeLiteralText += 'type: '[typeLiteralText.length]
-                    if (typeLiteralText.length == 'type: '.length)
+                    typeLiteralText += 'type:'[typeLiteralText.length]
+                    if (typeLiteralText.length == 'type:'.length)
                         currEl = 'type'
                     break
                 // @ts-ignore
@@ -212,8 +212,8 @@
                     break
                 // @ts-ignore
                 case 'id literal':
-                    idLiteralText += ' id: '[idLiteralText.length]
-                    if (idLiteralText.length == ' id: '.length)
+                    idLiteralText += 'id:'[idLiteralText.length]
+                    if (idLiteralText.length == 'id:'.length)
                         currEl = 'id'
                     break
                 // @ts-ignore
@@ -375,19 +375,23 @@
             >GO</button>
         </form>
     {:else}
-        <div class="mt-10">
-            <div id="processing-input-holder" class="flex flex-row items-center justify-center">
-                <p class="text-left font-light w-3/5s text-2xl text-lagoBlue-200 font-mono truncate my-10 p-0 h-20">
-                    {typeLiteralText}
-                    <span 
-                        class='text-heartwarming-300'>
-                        {typeText}
-                    </span>
-                    {idLiteralText}
-                    <span class="text-irishJig-300">
-                        {idText}
-                    </span>
-                </p>
+        <div class="mt-10 w-full">
+            <div id="processing-input-holder" class="flex flex-row items-center flex-wrap flex-shrink
+                text-lg font-light  text-lagoBlue-200 font-mono my-10 mx-5 h-20 md:text-2xl md:justify-center">
+                    <div id="type-and-type-literal" class="flex flex-row">
+                        {typeLiteralText}&nbsp
+                        <span 
+                            class='text-heartwarming-300'>
+                            {typeText}
+                        </span>
+                    </div>
+                    &nbsp
+                    <div id="id-and-id-literal" class="flex flex-row flex-shrink flex-wrap text-wrap">
+                        {idLiteralText}&nbsp
+                        <span class="text-irishJig-300 text-wrap">
+                            {idText}
+                        </span>
+                    </div>
             </div>   
             {#if !activeResponseAnimation}
                 <code>

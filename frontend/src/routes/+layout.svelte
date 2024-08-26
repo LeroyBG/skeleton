@@ -4,7 +4,7 @@
 </script>
 
 <header class="h-14 flex justify-center items-center text-puissantPurple-100 text-base">
-    <p>to use this app with any album, song, or playlist, <a class="text-irishJig-300 underline"
+    <p class="text-center w-3/4 mt-5">to use this app with any album, song, or playlist, <a class="text-irishJig-300 underline"
         href={PUBLIC_PROJECT_GITHUB_LINK}
         target="_blank">run it locally</a> :)</p>
 </header>
