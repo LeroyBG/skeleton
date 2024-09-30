@@ -4,6 +4,17 @@
     import { onMount } from "svelte";
     import { select, selection } from "$lib/stores/albumSliderSelection"
 
+    // Import sample data
+    import DiscoveryDaftPunk from '$lib/hard-coded_sample_reports/Disovery-Daft_Punk.json'
+    import goodkidmAAdcityKendrickLamar from '$lib/hard-coded_sample_reports/good_kid_mAAd_city-Kendrick_Lamar.json'
+    import PinataFreddieGibbs from '$lib/hard-coded_sample_reports/Pinata-Freddie_Gibbs.json'
+    import MadvillanyMFDoom from '$lib/hard-coded_sample_reports/Madvillany-MF_Doom.json'
+    import SCARINGTHEHOES_JPEGMAFIA from '$lib/hard-coded_sample_reports/SCARING_THE_HOES-JPEGMAFIA_DANNY_BROWN.json'
+    import ILAYDOWNMYLIFEFORYOU_JPEGMAFIA from '$lib/hard-coded_sample_reports/I_LAY_DOWN_MY_LIFE_FOR_YOU-JPEGMAFIA.json'
+    import DonutsJDilla from '$lib/hard-coded_sample_reports/Donuts-J_Dilla.json'
+    import ToPimpAButterflyKendrickLamar from '$lib/hard-coded_sample_reports/To_Pimp_a_Butterfly-Kendrick_Lamar.json'
+    import ThreeFeetHighAndRisingDeLaSoul from '$lib/hard-coded_sample_reports/3_Feet_High_and_Rising-De_La_Soul.json'
+    import PaulsBoutiqueBeastieBoys from '$lib/hard-coded_sample_reports/Pauls_Boutique-Beastie_Boys.json'
 
     const URIorURLPattern = /\/(?<resourceType>(track)|(album)|(playlist))(:|\/)(?<id>\w+)?/ig
 
@@ -106,32 +117,50 @@
         let samplesReport: samplesReport | null = null
         let originalResourceName: string | null = null
         let newPlaylistName: string | null = null
-        const get_url = `/?uri=${originalResourceURIInput}`
-        console.log("sending a request to", get_url)
-        try {
-            const before = Date.now()
-            const res = await fetch(get_url, {
-                credentials: 'include'
-            })
-            const diff = Date.now() - before
-            const delayAmount = 5000 + Math.random() * 3000
-            if (diff < delayAmount) {
-                await delay(delayAmount - diff)
-            }
-            if (!res.ok) {
-                throw new Error(res.statusText)
-            }
-            const data = await res.json()
-            playlistURI = data["playlist_uri"]
-            samplesReport  = data["samples_report"]
-            originalResourceName = data["original_resource_name"]
-            newPlaylistName =  data["playlist_name"]
-            activeResponseAnimation = false // Should halt playLoadingTextAnimations
-
-        } catch (err) {
-            // ugugusdogisdogosdmf
-            console.log(err)
+        let data;
+        switch (originalResourceURIInput) {
+            case 'open.spotify.com/album/2noRn2Aes5aoNVsU6iWThc':
+                data = (DiscoveryDaftPunk)
+                break
+            case 'open.spotify.com/album/3DGQ1iZ9XKUQxAUWjfC34w':
+                data = (goodkidmAAdcityKendrickLamar)
+                break
+            case 'open.spotify.com/album/43uErencdmuTRFZPG3zXL1':
+                data = (PinataFreddieGibbs)
+                break
+            case 'open.spotify.com/album/19bQiwEKhXUBJWY6oV3KZk':
+                data = (MadvillanyMFDoom)
+                break
+            case 'open.spotify.com/album/3u20OXh03DjCUzbf8XcGTq':
+                data = (SCARINGTHEHOES_JPEGMAFIA)
+                break
+            case 'open.spotify.com/album/1ezs1QD5SYQ6LtxpC9y5I2':
+                data = (ILAYDOWNMYLIFEFORYOU_JPEGMAFIA)
+                break
+            case 'open.spotify.com/album/5fMlysqhFE0itGn4KezMBW':
+                data = (DonutsJDilla)
+                break
+            case 'open.spotify.com/album/7ycBtnsMtyVbbwTfJwRjSP':
+                data = (ToPimpAButterflyKendrickLamar)
+                break
+            case 'open.spotify.com/album/34LxHI9x14qXUOS8AWRrYD':
+                data = (ThreeFeetHighAndRisingDeLaSoul)
+                break
+            case 'open.spotify.com/album/1kmyirVya5fRxdjsPFDM05':
+                data = (PaulsBoutiqueBeastieBoys)
+                break
         }
+
+        const delayAmount = 5000 + Math.random() * 3000
+        await delay(delayAmount)
+
+        // Data won't be undefined because it's hardcoded json
+        playlistURI = data["playlist_uri"]
+        samplesReport  = data["samples_report"]
+        originalResourceName = data["original_resource_name"]
+        newPlaylistName =  data["playlist_name"]
+        activeResponseAnimation = false // Should halt playLoadingTextAnimations
+
 
         activeResponseAnimation = true
         await playSampleReportTextAnimations(playlistURI, samplesReport || [], newPlaylistName || originalResourceName!)
