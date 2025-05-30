@@ -12,7 +12,7 @@
     import SCARINGTHEHOES_JPEGMAFIA from '$lib/hard-coded_sample_reports/SCARING_THE_HOES-JPEGMAFIA_DANNY_BROWN.json'
     import ILAYDOWNMYLIFEFORYOU_JPEGMAFIA from '$lib/hard-coded_sample_reports/I_LAY_DOWN_MY_LIFE_FOR_YOU-JPEGMAFIA.json'
     import DonutsJDilla from '$lib/hard-coded_sample_reports/Donuts-J_Dilla.json'
-    import ToPimpAButterflyKendrickLamar from '$lib/hard-coded_sample_reports/To_Pimp_a_Butterfly-Kendrick_Lamar.json'
+    import ToPimpAButterflyKendrickLamar from '$lib/hard-coded_sample_reports/To_Pimp_A_Butterfly-Kendrick_Lamar.json'
     import ThreeFeetHighAndRisingDeLaSoul from '$lib/hard-coded_sample_reports/3_Feet_High_and_Rising-De_La_Soul.json'
     import PaulsBoutiqueBeastieBoys from '$lib/hard-coded_sample_reports/Pauls_Boutique-Beastie_Boys.json'
 
